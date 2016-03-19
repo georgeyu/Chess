@@ -8,9 +8,9 @@ namespace Chess.Position
 {
     internal interface Piece
     {
-        bool IsWhite { get; set; }
+        bool IsWhite { get; }
 
-        bool HasMoved { get; set; }
+        bool HasMoved { get; }
 
         SquareChange[][] GetMoves();
 
