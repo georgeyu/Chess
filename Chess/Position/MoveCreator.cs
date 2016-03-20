@@ -51,7 +51,7 @@ namespace Chess.Position
         {
             var actionsList = new List<T>();
             List <List<SquareChange>> finalSquaresSet = getFinalSquaresSet(length);
-            foreach (List<SquareChange> finalSquares in finalSquaresSet)
+            foreach (var finalSquares in finalSquaresSet)
             {
                 List<T> actions = expand(finalSquares);
                 actionsList.AddRange(actions);
@@ -63,7 +63,7 @@ namespace Chess.Position
         private static List<SquareChange[]> ExpandToMoves(List<SquareChange> longestMove)
         {
             var expansions = new List<SquareChange[]>();
-            for (int i = 1; i <= longestMove.Count; i++)
+            for (var i = 1; i <= longestMove.Count; i++)
             {
                 IEnumerable<SquareChange> expansionEnumerable = longestMove.Take(i);
                 var expansionArray = expansionEnumerable.ToArray();
@@ -75,7 +75,7 @@ namespace Chess.Position
         private static List<Capture> ExpandToCaptures(List<SquareChange> longestMove)
         {
             var expansions = new List<Capture>();
-            for (int i = 0; i < longestMove.Count; i++)
+            for (var i = 0; i < longestMove.Count; i++)
             {
                 SquareChange finalSquare = longestMove.ElementAt(i);
                 IEnumerable<SquareChange> passingSquaresEnumerable = longestMove.Take(i);
@@ -117,7 +117,7 @@ namespace Chess.Position
         private static List<SquareChange> GetFinalSquares(int length, Func<int, SquareChange> getFinalSquare)
         {
             var finalSquares = new List<SquareChange>();
-            for (int i = 1; i <= length; i++)
+            for (var i = 1; i <= length; i++)
             {
                 SquareChange finalSquare = getFinalSquare(i);
                 finalSquares.Add(finalSquare);
