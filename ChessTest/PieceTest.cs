@@ -15,6 +15,9 @@ namespace ChessTest
         private const int PawnMovesHasntMoved = 2;
         private const int PawnMovesHasMoved = 1;
         private const int PawnCaptures = 2;
+        private const int MaxRange = 7;
+        private const int HorizontalVerticalVectors = 4;
+        private const int DiagonalVectors = 4;
 
         [TestMethod]
         public void KingGetMoves_None_Count()
@@ -105,6 +108,34 @@ namespace ChessTest
         {
             var pawn = new Pawn(true, false);
             TestCaptures(pawn, PawnCaptures);
+        }
+
+        [TestMethod]
+        public void GetHorizontalVerticalMoves_MaxRange_Count()
+        {
+            SquareChange[][] moves = MoveCreator.GetHorizontalVerticalMoves(MaxRange);
+            Assert.IsTrue(moves.Length == MaxRange * HorizontalVerticalVectors);
+        }
+
+        [TestMethod]
+        public void GetDiagonalMoves_MaxRange_Count()
+        {
+            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(MaxRange);
+            Assert.IsTrue(moves.Length == MaxRange * DiagonalVectors);
+        }
+
+        [TestMethod]
+        public void GetHorizontalVerticalCaptures_MaxRange_Count()
+        {
+            Capture[] captures = MoveCreator.GetHorizontalVerticalCaptures(MaxRange);
+            Assert.IsTrue(captures.Length == MaxRange * HorizontalVerticalVectors);
+        }
+
+        [TestMethod]
+        public void GetDiagonalCaptures_MaxRange_Count()
+        {
+            Capture[] captures = MoveCreator.GetDiagonalCaptures(MaxRange);
+            Assert.IsTrue(captures.Length == MaxRange * DiagonalVectors);
         }
 
         private void TestMoves(Piece piece, int count)
