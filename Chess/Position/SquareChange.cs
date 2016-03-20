@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Chess.Position
 {
+    [DebuggerDisplay("FileChange = {FileChange}, RankChange = {RankChange}")]
     internal class SquareChange
     {
         public SquareChange(int fileChange, int rankChange)
