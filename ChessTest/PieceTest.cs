@@ -1,6 +1,7 @@
 ﻿using Chess.Position;
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Chess;
 
 namespace ChessTest
 {
@@ -15,7 +16,6 @@ namespace ChessTest
         private const int PawnMovesHasntMoved = 2;
         private const int PawnMovesHasMoved = 1;
         private const int PawnCaptures = 2;
-        private const int MaxRange = 7;
         private const int HorizontalVerticalVectors = 4;
         private const int DiagonalVectors = 4;
 
@@ -113,29 +113,29 @@ namespace ChessTest
         [TestMethod]
         public void GetHorizontalVerticalMoves_MaxRange_Count()
         {
-            SquareChange[][] moves = MoveCreator.GetHorizontalVerticalMoves(MaxRange);
-            Assert.IsTrue(moves.Length == MaxRange * HorizontalVerticalVectors);
+            SquareChange[][] moves = MoveCreator.GetHorizontalVerticalMoves(Constants.MaxMoveRange);
+            Assert.IsTrue(moves.Length == Constants.MaxMoveRange * HorizontalVerticalVectors);
         }
 
         [TestMethod]
         public void GetDiagonalMoves_MaxRange_Count()
         {
-            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(MaxRange);
-            Assert.IsTrue(moves.Length == MaxRange * DiagonalVectors);
+            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(Constants.MaxMoveRange);
+            Assert.IsTrue(moves.Length == Constants.MaxMoveRange * DiagonalVectors);
         }
 
         [TestMethod]
         public void GetHorizontalVerticalCaptures_MaxRange_Count()
         {
-            Capture[] captures = MoveCreator.GetHorizontalVerticalCaptures(MaxRange);
-            Assert.IsTrue(captures.Length == MaxRange * HorizontalVerticalVectors);
+            Capture[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.MaxMoveRange);
+            Assert.IsTrue(captures.Length == Constants.MaxMoveRange * HorizontalVerticalVectors);
         }
 
         [TestMethod]
         public void GetDiagonalCaptures_MaxRange_Count()
         {
-            Capture[] captures = MoveCreator.GetDiagonalCaptures(MaxRange);
-            Assert.IsTrue(captures.Length == MaxRange * DiagonalVectors);
+            Capture[] captures = MoveCreator.GetDiagonalCaptures(Constants.MaxMoveRange);
+            Assert.IsTrue(captures.Length == Constants.MaxMoveRange * DiagonalVectors);
         }
 
         private void TestMoves(Piece piece, int count)

@@ -10,6 +10,8 @@ namespace Chess.Position
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class King : Piece
     {
+        private const int KingRange = 1;
+
         public King(bool isWhite, bool hasMoved)
         {
             IsWhite = isWhite;
@@ -22,42 +24,23 @@ namespace Chess.Position
 
         public SquareChange[][] GetMoves()
         {
-            List<SquareChange> moves = CreateMoves();
-            var movesEnumerable = moves.Select(x => new SquareChange[] { x });
-            var movesArray = movesEnumerable.ToArray();
-            return movesArray;
+            SquareChange[][] moves = GetActions(MoveCreator.GetHorizontalVerticalMoves, MoveCreator.GetDiagonalMoves);
+            return moves;
         }
 
         public Capture[] GetCaptures()
         {
-            List<SquareChange> moves = CreateMoves();
-            var capturesEnumerable = moves.Select(x => new Capture(x, new SquareChange[] { }));
-            var capturesArray = capturesEnumerable.ToArray();
-            return capturesArray;
+            Capture[] captures = GetActions(MoveCreator.GetHorizontalVerticalCaptures, MoveCreator.GetDiagonalCaptures);
+            return captures;
         }
 
-        private List<SquareChange> CreateMoves()
+        private T[] GetActions<T>(Func<int, T[]> getHorizontalVerticalActions, Func<int, T[]> getDiagonalActions)
         {
-            var moves = new List<SquareChange>();
-            for (int i = -1; i <= 1; i++)
-            {
-                List<SquareChange> movesForFile = LoopOverRank(i);
-                moves.AddRange(movesForFile);
-            }
-            var noMove = new SquareChange(0, 0);
-            moves.Remove(noMove);
-            return moves;
-        }
-
-        private List<SquareChange> LoopOverRank(int file)
-        {
-            var moves = new List<SquareChange>();
-            for (int i = -1; i <= 1; i++)
-            {
-                var move = new SquareChange(file, i);
-                moves.Add(move);
-            }
-            return moves;
+            T[] horizontalVerticalActions = getHorizontalVerticalActions(KingRange);
+            T[] diagonalActions = getDiagonalActions(KingRange);
+            IEnumerable<T> actionsEnumerable = horizontalVerticalActions.Concat(diagonalActions);
+            var actionsArray = actionsEnumerable.ToArray();
+            return actionsArray;
         }
     }
 }

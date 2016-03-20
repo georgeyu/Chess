@@ -22,12 +22,23 @@ namespace Chess.Position
 
         public SquareChange[][] GetMoves()
         {
-            throw new NotImplementedException();
+            SquareChange[][] moves = GetActions(MoveCreator.GetHorizontalVerticalMoves, MoveCreator.GetDiagonalMoves);
+            return moves;
         }
 
         public Capture[] GetCaptures()
         {
-            throw new NotImplementedException();
+            Capture[] captures = GetActions(MoveCreator.GetHorizontalVerticalCaptures, MoveCreator.GetDiagonalCaptures);
+            return captures;
+        }
+
+        private T[] GetActions<T>(Func<int, T[]> getHorizontalVerticalActions, Func<int, T[]> getDiagonalActions)
+        {
+            T[] horizontalVerticalActions = getHorizontalVerticalActions(Constants.MaxMoveRange);
+            T[] diagonalActions = getDiagonalActions(Constants.MaxMoveRange);
+            IEnumerable<T> actionsEnumerable = horizontalVerticalActions.Concat(diagonalActions);
+            var actionsArray = actionsEnumerable.ToArray();
+            return actionsArray;
         }
     }
 }

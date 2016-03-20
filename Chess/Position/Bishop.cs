@@ -22,12 +22,14 @@ namespace Chess.Position
 
         public SquareChange[][] GetMoves()
         {
-            throw new NotImplementedException();
+            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(Constants.MaxMoveRange);
+            return moves;
         }
 
         public Capture[] GetCaptures()
         {
-            throw new NotImplementedException();
+            Capture[] captures = MoveCreator.GetDiagonalCaptures(Constants.MaxMoveRange);
+            return captures;
         }
     }
 }
