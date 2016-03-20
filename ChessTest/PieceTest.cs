@@ -100,7 +100,7 @@ namespace ChessTest
         public void PawnGetMoves_HasMoved_Count()
         {
             var pawn = new Pawn(true, true);
-            TestMoves(pawn, PawnMovesHasntMoved);
+            TestMoves(pawn, PawnMovesHasMoved);
         }
 
         [TestMethod]

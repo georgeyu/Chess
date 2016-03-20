@@ -70,7 +70,7 @@ namespace Chess.Position
             var moves = new List<SquareChange>();
             foreach (var sign in signs)
             {
-                SquareChange move = new SquareChange(moveBaseCase.Item1, sign * moveBaseCase.Item2);
+                SquareChange move = new SquareChange(fileSign * moveBaseCase.Item1, sign * moveBaseCase.Item2);
                 moves.Add(move);
             }
             return moves;
