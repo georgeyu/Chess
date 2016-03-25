@@ -34,8 +34,8 @@ namespace Chess.Position
 
         private T[] GetActions<T>(Func<int, T[]> getHorizontalVerticalActions, Func<int, T[]> getDiagonalActions)
         {
-            T[] horizontalVerticalActions = getHorizontalVerticalActions(Constants.MaxMoveRange);
-            T[] diagonalActions = getDiagonalActions(Constants.MaxMoveRange);
+            T[] horizontalVerticalActions = getHorizontalVerticalActions(Constants.BoardDimension - 1);
+            T[] diagonalActions = getDiagonalActions(Constants.BoardDimension - 1);
             IEnumerable<T> actionsEnumerable = horizontalVerticalActions.Concat(diagonalActions);
             var actionsArray = actionsEnumerable.ToArray();
             return actionsArray;

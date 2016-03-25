@@ -22,13 +22,13 @@ namespace Chess.Position
 
         public SquareChange[][] GetMoves()
         {
-            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(Constants.MaxMoveRange);
+            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(Constants.BoardDimension - 1);
             return moves;
         }
 
         public Capture[] GetCaptures()
         {
-            Capture[] captures = MoveCreator.GetDiagonalCaptures(Constants.MaxMoveRange);
+            Capture[] captures = MoveCreator.GetDiagonalCaptures(Constants.BoardDimension - 1);
             return captures;
         }
     }

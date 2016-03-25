@@ -33,5 +33,10 @@ namespace Chess.Position
             }
             return (squareChange.FileChange == this.FileChange) && (squareChange.RankChange == this.RankChange);
         }
+
+        public override int GetHashCode()
+        {
+            return FileChange ^ RankChange;
+        }
     }
 }

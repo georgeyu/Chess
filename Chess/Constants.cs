@@ -8,6 +8,6 @@ namespace Chess
 {
     internal static class Constants
     {
-        public const int MaxMoveRange = 7;
+        public const int BoardDimension = 8;
     }
 }

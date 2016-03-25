@@ -113,29 +113,29 @@ namespace ChessTest
         [TestMethod]
         public void GetHorizontalVerticalMoves_MaxRange_Count()
         {
-            SquareChange[][] moves = MoveCreator.GetHorizontalVerticalMoves(Constants.MaxMoveRange);
-            Assert.IsTrue(moves.Length == Constants.MaxMoveRange * HorizontalVerticalVectors);
+            SquareChange[][] moves = MoveCreator.GetHorizontalVerticalMoves(Constants.BoardDimension - 1);
+            Assert.IsTrue(moves.Length == (Constants.BoardDimension - 1) * HorizontalVerticalVectors);
         }
 
         [TestMethod]
         public void GetDiagonalMoves_MaxRange_Count()
         {
-            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(Constants.MaxMoveRange);
-            Assert.IsTrue(moves.Length == Constants.MaxMoveRange * DiagonalVectors);
+            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(Constants.BoardDimension - 1);
+            Assert.IsTrue(moves.Length == (Constants.BoardDimension - 1) * DiagonalVectors);
         }
 
         [TestMethod]
         public void GetHorizontalVerticalCaptures_MaxRange_Count()
         {
-            Capture[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.MaxMoveRange);
-            Assert.IsTrue(captures.Length == Constants.MaxMoveRange * HorizontalVerticalVectors);
+            Capture[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.BoardDimension - 1);
+            Assert.IsTrue(captures.Length == (Constants.BoardDimension - 1) * HorizontalVerticalVectors);
         }
 
         [TestMethod]
         public void GetDiagonalCaptures_MaxRange_Count()
         {
-            Capture[] captures = MoveCreator.GetDiagonalCaptures(Constants.MaxMoveRange);
-            Assert.IsTrue(captures.Length == Constants.MaxMoveRange * DiagonalVectors);
+            Capture[] captures = MoveCreator.GetDiagonalCaptures(Constants.BoardDimension - 1);
+            Assert.IsTrue(captures.Length == (Constants.BoardDimension - 1) * DiagonalVectors);
         }
 
         private void TestMoves(Piece piece, int count)
