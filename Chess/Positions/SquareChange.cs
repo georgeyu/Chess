@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Position
+namespace Chess.Positions
 {
     [DebuggerDisplay("FileChange = {FileChange}, RankChange = {RankChange}")]
     internal class SquareChange

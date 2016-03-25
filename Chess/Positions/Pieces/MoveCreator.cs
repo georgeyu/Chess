@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Position.Piece
+namespace Chess.Positions.Pieces
 {
     internal static class MoveCreator
     {

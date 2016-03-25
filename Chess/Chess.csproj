@@ -89,16 +89,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Position\Piece\Bishop.cs" />
-    <Compile Include="Position\Capture.cs" />
-    <Compile Include="Position\Piece\King.cs" />
-    <Compile Include="Position\Piece\Knight.cs" />
-    <Compile Include="Position\Piece\MoveCreator.cs" />
-    <Compile Include="Position\Piece\Pawn.cs" />
-    <Compile Include="Position\Piece\Piece.cs" />
-    <Compile Include="Position\Piece\Queen.cs" />
-    <Compile Include="Position\Piece\Rook.cs" />
-    <Compile Include="Position\SquareChange.cs" />
+    <Compile Include="Positions\EmptySquare.cs" />
+    <Compile Include="Positions\Pieces\Bishop.cs" />
+    <Compile Include="Positions\Capture.cs" />
+    <Compile Include="Positions\Pieces\King.cs" />
+    <Compile Include="Positions\Pieces\Knight.cs" />
+    <Compile Include="Positions\Pieces\MoveCreator.cs" />
+    <Compile Include="Positions\Pieces\Pawn.cs" />
+    <Compile Include="Positions\Pieces\Piece.cs" />
+    <Compile Include="Positions\Position.cs" />
+    <Compile Include="Positions\Pieces\Queen.cs" />
+    <Compile Include="Positions\Pieces\Rook.cs" />
+    <Compile Include="Positions\Square.cs" />
+    <Compile Include="Positions\SquareChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
