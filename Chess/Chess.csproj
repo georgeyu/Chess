@@ -89,15 +89,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Position\Bishop.cs" />
+    <Compile Include="Position\Piece\Bishop.cs" />
     <Compile Include="Position\Capture.cs" />
-    <Compile Include="Position\King.cs" />
-    <Compile Include="Position\Knight.cs" />
-    <Compile Include="Position\MoveCreator.cs" />
-    <Compile Include="Position\Pawn.cs" />
-    <Compile Include="Position\Piece.cs" />
-    <Compile Include="Position\Queen.cs" />
-    <Compile Include="Position\Rook.cs" />
+    <Compile Include="Position\Piece\King.cs" />
+    <Compile Include="Position\Piece\Knight.cs" />
+    <Compile Include="Position\Piece\MoveCreator.cs" />
+    <Compile Include="Position\Piece\Pawn.cs" />
+    <Compile Include="Position\Piece\Piece.cs" />
+    <Compile Include="Position\Piece\Queen.cs" />
+    <Compile Include="Position\Piece\Rook.cs" />
     <Compile Include="Position\SquareChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -138,6 +138,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

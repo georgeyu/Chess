@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Position
+namespace Chess.Position.Piece
 {
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Rook : Piece
+    internal class Bishop : Piece
     {
-        public Rook(bool isWhite, bool hasMoved)
+        public Bishop(bool isWhite, bool hasMoved)
         {
             IsWhite = isWhite;
             HasMoved = hasMoved;
@@ -22,13 +22,13 @@ namespace Chess.Position
 
         public SquareChange[][] GetMoves()
         {
-            SquareChange[][] moves = MoveCreator.GetHorizontalVerticalMoves(Constants.BoardDimension - 1);
+            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(Constants.BoardDimension - 1);
             return moves;
         }
 
         public Capture[] GetCaptures()
         {
-            Capture[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.BoardDimension - 1);
+            Capture[] captures = MoveCreator.GetDiagonalCaptures(Constants.BoardDimension - 1);
             return captures;
         }
     }

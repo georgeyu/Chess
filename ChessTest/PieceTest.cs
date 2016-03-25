@@ -1,4 +1,5 @@
 ﻿using Chess.Position;
+using Chess.Position.Piece;
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Chess;
