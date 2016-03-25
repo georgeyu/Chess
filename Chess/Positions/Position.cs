@@ -24,6 +24,7 @@ namespace Chess.Positions
         {
             IsWhiteMove = true;
             MoveNumber = 1;
+            Board = new Square[Constants.BoardDimension, Constants.BoardDimension];
             SetupStartPosition();
         }
 
@@ -38,11 +39,11 @@ namespace Chess.Positions
 
         public int MoveNumber { get; private set; }
 
+        // The 0th dimension is the file. The 1st dimension is the rank.
         public Square[,] Board { get; private set; }
 
         private void SetupStartPosition()
         {
-            Board = new Square[Constants.BoardDimension, Constants.BoardDimension];
             FillWithEmptySquares();
             FillWithPawns();
             FillDoublePieces();
@@ -77,6 +78,9 @@ namespace Chess.Positions
             }
         }
 
+        /// <summary>
+        /// Fill with pieces that have a copy with the same color (knight, bishop and rook).
+        /// </summary>
         private void FillDoublePieces()
         {
             Piece whiteKnight = new Knight(true, false);
@@ -99,7 +103,10 @@ namespace Chess.Positions
             Board[offset, rank] = piece;
             Board[Constants.BoardDimension - 1 - offset, rank] = piece;
         }
-        
+
+        /// <summary>
+        /// Fill with pieces that do not have a copy (king and queen).
+        /// </summary>
         private void FillSinglePieces()
         {
             Piece whiteQueen = new Queen(true, false);
