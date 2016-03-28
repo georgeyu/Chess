@@ -28,7 +28,7 @@ namespace Chess.Positions
         public Position()
         {
             IsWhiteTurn = true;
-            MoveNumber = 1;
+            TurnNumber = 1;
             Board = new Square[Constants.BoardDimension, Constants.BoardDimension];
             SetupStartPosition();
         }
@@ -36,13 +36,13 @@ namespace Chess.Positions
         public Position(bool isWhiteTurn, int moveNumber)
         {
             IsWhiteTurn = isWhiteTurn;
-            MoveNumber = moveNumber;
+            TurnNumber = moveNumber;
             throw new NotImplementedException();
         }
 
         public bool IsWhiteTurn { get; private set; }
 
-        public int MoveNumber { get; private set; }
+        public int TurnNumber { get; private set; }
 
         // The 0th dimension is the file. The 1st dimension is the rank.
         public Square[,] Board { get; private set; }
@@ -58,6 +58,22 @@ namespace Chess.Positions
                 movesStayingOnBoard);
             var moves = movesWherePassingSquaresAreEmpty.ToArray();
             return moves;
+        }
+
+        /// <summary>
+        /// Changes the position to match the move made.
+        /// </summary>
+        /// <param name="move">Move to make.</param>
+        public void MakeMove(MoveAbsolute move)
+        {
+            var square = Board[move.StartSquare.File, move.StartSquare.Rank];
+            var emptySquare = new EmptySquare();
+            Board[move.StartSquare.File, move.StartSquare.Rank] = emptySquare;
+            SquareAbsolute finalSquare = move.PassingSquares.Last();
+            var piece = square as Piece;
+            piece.HasMoved = true;
+            Board[finalSquare.File, finalSquare.Rank] = piece;
+            IncrementTurn();
         }
 
         private void SetupStartPosition()
@@ -255,6 +271,15 @@ namespace Chess.Positions
                 moveStayingOnBoard.Add(move);
             }
             return moveStayingOnBoard;
+        }
+
+        private void IncrementTurn()
+        {
+            if (!IsWhiteTurn)
+            {
+                TurnNumber++;
+            }
+            IsWhiteTurn = !IsWhiteTurn;
         }
     }
 }

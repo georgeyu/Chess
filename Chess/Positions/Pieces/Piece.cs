@@ -10,7 +10,7 @@ namespace Chess.Positions.Pieces
     {
         bool IsWhite { get; }
 
-        bool HasMoved { get; }
+        bool HasMoved { get; set; }
 
         SquareRelative[][] GetMoves();
 
