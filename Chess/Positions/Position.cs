@@ -1,7 +1,9 @@
 ﻿using Chess.Positions.Pieces;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,28 +21,44 @@ namespace Chess.Positions
         private const int BishopFileOffset = 2;
         private const int QueenFile = 3;
         private const int KingFile = 4;
+        private const int FileIndex = 0;
+        private const int RankIndex = 1;
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public Position()
         {
-            IsWhiteMove = true;
+            IsWhiteTurn = true;
             MoveNumber = 1;
             Board = new Square[Constants.BoardDimension, Constants.BoardDimension];
             SetupStartPosition();
         }
 
-        public Position(bool isWhiteMove, int moveNumber)
+        public Position(bool isWhiteTurn, int moveNumber)
         {
-            IsWhiteMove = isWhiteMove;
+            IsWhiteTurn = isWhiteTurn;
             MoveNumber = moveNumber;
             throw new NotImplementedException();
         }
 
-        public bool IsWhiteMove { get; private set; }
+        public bool IsWhiteTurn { get; private set; }
 
         public int MoveNumber { get; private set; }
 
         // The 0th dimension is the file. The 1st dimension is the rank.
         public Square[,] Board { get; private set; }
+
+        /// <summary>
+        /// Gets legal moves.
+        /// </summary>
+        public MoveAbsolute[] GetMoves()
+        {
+            List<MoveAbsolute> movesIgnoringLegality = GetMovesIgnoringLegality();
+            List<MoveAbsolute> movesStayingOnBoard = GetMovesStayingOnBoard(movesIgnoringLegality);
+            List<MoveAbsolute> movesWherePassingSquaresAreEmpty = GetMovesWherePassingSquaresAreEmpty(
+                movesStayingOnBoard);
+            var moves = movesWherePassingSquaresAreEmpty.ToArray();
+            return moves;
+        }
 
         private void SetupStartPosition()
         {
@@ -117,6 +135,126 @@ namespace Chess.Positions
             Board[KingFile, WhitePieceRank] = whiteKing;
             Board[QueenFile, BlackPieceRank] = blackQueen;
             Board[KingFile, BlackPieceRank] = blackKing;
+        }
+
+        /// <summary>
+        /// Gets all moves for the pieces on the board of the current color.
+        /// </summary>
+        /// <returns></returns>
+        private List<MoveAbsolute> GetMovesIgnoringLegality()
+        {
+            var moves = new List<MoveAbsolute>();
+            int files = Board.GetLength(FileIndex);
+            for (int i = 0; i < files; i++)
+            {
+                List<MoveAbsolute> movesOnFile = GetMovesOnFile(i);
+                moves.AddRange(movesOnFile);
+            }
+            return moves;
+        }
+
+        /// <summary>
+        /// Gets all moves for the pieces on the file of the current color.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private List<MoveAbsolute> GetMovesOnFile(int file)
+        {
+            int ranks = Board.GetLength(RankIndex);
+            var moves = new List<MoveAbsolute>();
+            for (int i = 0; i < ranks; i++)
+            {
+                List<MoveAbsolute> movesFromSquare = GetMovesFromSquare(Board[file, i], file, i);
+                moves.AddRange(movesFromSquare);
+            }
+            return moves;
+        }
+
+        /// <summary>
+        /// If a square has a piece, then get the moves for the current turn.
+        /// </summary>
+        /// <param name="square">Square to check for piece and current turn color.</param>
+        /// <returns></returns>
+        private List<MoveAbsolute>GetMovesFromSquare(Square square, int file, int rank)
+        {
+            var movesAbsolute = new List<MoveAbsolute>();
+            bool isEmpty = square is EmptySquare;
+            if (isEmpty)
+            {
+                return movesAbsolute;
+            }
+            Piece piece = square as Piece;
+            if (piece == null)
+            {
+                log.Error("Square not recognized");
+            }
+            if (piece.IsWhite != IsWhiteTurn)
+            {
+                return movesAbsolute;
+            }
+            SquareRelative[][] movesRelative = piece.GetMoves();
+            var startSquare = new SquareAbsolute(file, rank);
+            foreach (var moveRelative in movesRelative)
+            {
+                var squaresAbsoluteEnumerable = moveRelative.Select(
+                    x => new SquareAbsolute(file + x.FileChange, rank + x.RankChange));
+                var squaresAbsoluteArray = squaresAbsoluteEnumerable.ToArray();
+                var moveAbsolute = new MoveAbsolute(startSquare, squaresAbsoluteArray);
+                movesAbsolute.Add(moveAbsolute);
+            }
+            return movesAbsolute;
+        }
+
+        private List<MoveAbsolute> GetMovesWherePassingSquaresAreEmpty(List<MoveAbsolute> moves)
+        {
+            var movesWherePassingSquaresAreEmpty = new List<MoveAbsolute>();
+            foreach (MoveAbsolute move in moves)
+            {
+                List<MoveAbsolute> moveWherePassingSquaresAreEmpty = GetMoveWherePassingSquaresAreEmpty(move);
+                movesWherePassingSquaresAreEmpty.AddRange(moveWherePassingSquaresAreEmpty);
+            }
+            return movesWherePassingSquaresAreEmpty;
+        }
+
+        private List<MoveAbsolute> GetMoveWherePassingSquaresAreEmpty(MoveAbsolute move)
+        {
+            var moves = new List<MoveAbsolute>();
+            var arePassingSquaresEmpty = move.PassingSquares.Select(x => Board[x.File, x.Rank] is EmptySquare);
+            var areAllPassingSquaresEmpty = arePassingSquaresEmpty.Aggregate((x, y) => x && y);
+            if (areAllPassingSquaresEmpty)
+            {
+                moves.Add(move);
+            }
+            return moves;
+        }
+
+        private List<MoveAbsolute> GetMovesStayingOnBoard(List<MoveAbsolute> moves)
+        {
+            var movesStayingOnBoard = new List<MoveAbsolute>();
+            foreach (MoveAbsolute move in moves)
+            {
+                List<MoveAbsolute> moveStayingOnBoard = GetMoveStayingOnBoard(move);
+                movesStayingOnBoard.AddRange(moveStayingOnBoard);
+            }
+            return movesStayingOnBoard;
+        }
+
+        private List<MoveAbsolute> GetMoveStayingOnBoard(MoveAbsolute move)
+        {
+            var moveStayingOnBoard = new List<MoveAbsolute>();
+            int files = Board.GetLength(FileIndex);
+            int ranks = Board.GetLength(RankIndex);
+            var doPassingSquaresStayOnBoard = move.PassingSquares.Select(x => (
+                (x.File < files) &&
+                (x.Rank < ranks) &&
+                (x.File >= 0) &&
+                (x.Rank >= 0)));
+            bool doAllPassingSquaresStayOnBoard = doPassingSquaresStayOnBoard.Aggregate((x, y) => x && y);
+            if (doAllPassingSquaresStayOnBoard)
+            {
+                moveStayingOnBoard.Add(move);
+            }
+            return moveStayingOnBoard;
         }
     }
 }

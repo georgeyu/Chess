@@ -12,8 +12,8 @@ namespace Chess.Positions.Pieces
 
         bool HasMoved { get; }
 
-        SquareChange[][] GetMoves();
+        SquareRelative[][] GetMoves();
 
-        Capture[] GetCaptures();
+        CaptureRelative[] GetCaptures();
     }
 }

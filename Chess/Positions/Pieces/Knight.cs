@@ -24,53 +24,53 @@ namespace Chess.Positions.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GetMoves()
+        public SquareRelative[][] GetMoves()
         {
-            List<SquareChange> finalSquares = GetFinalSquares();
-            IEnumerable<SquareChange[]> movesEnumerable = finalSquares.Select(x => new SquareChange[] { x });
-            SquareChange[][] movesArray = movesEnumerable.ToArray();
+            List<SquareRelative> finalSquares = GetFinalSquares();
+            IEnumerable<SquareRelative[]> movesEnumerable = finalSquares.Select(x => new SquareRelative[] { x });
+            SquareRelative[][] movesArray = movesEnumerable.ToArray();
             return movesArray;
         }
 
-        public Capture[] GetCaptures()
+        public CaptureRelative[] GetCaptures()
         {
-            List<SquareChange> finalSquares = GetFinalSquares();
-            IEnumerable<Capture> capturesEnumerable = finalSquares.Select(x => new Capture(x, new SquareChange[] { }));
-            Capture[] capturesArray = capturesEnumerable.ToArray();
+            List<SquareRelative> finalSquares = GetFinalSquares();
+            IEnumerable<CaptureRelative> capturesEnumerable = finalSquares.Select(x => new CaptureRelative(x, new SquareRelative[] { }));
+            CaptureRelative[] capturesArray = capturesEnumerable.ToArray();
             return capturesArray;
         }
 
-        private List<SquareChange> GetFinalSquares()
+        private List<SquareRelative> GetFinalSquares()
         {
-            var finalSquares = new List<SquareChange>();
+            var finalSquares = new List<SquareRelative>();
             var fileShort = new Tuple<int, int>(Short, Long);
             var rankShort = new Tuple<int, int>(Long, Short);
             Tuple<int, int>[] moveBaseCases = { fileShort, rankShort };
             foreach (var moveBaseCase in moveBaseCases)
             {
-                List<SquareChange> fileSignFlipped = FlipFileSign(moveBaseCase);
+                List<SquareRelative> fileSignFlipped = FlipFileSign(moveBaseCase);
                 finalSquares.AddRange(fileSignFlipped);
             }
             return finalSquares;
         }
 
-        private List<SquareChange> FlipFileSign(Tuple<int, int> moveBaseCase)
+        private List<SquareRelative> FlipFileSign(Tuple<int, int> moveBaseCase)
         {
-            var moves = new List<SquareChange>();
+            var moves = new List<SquareRelative>();
             foreach (var sign in signs)
             {
-                List<SquareChange> rankSignFlipped = FlipRankSign(moveBaseCase, sign);
+                List<SquareRelative> rankSignFlipped = FlipRankSign(moveBaseCase, sign);
                 moves.AddRange(rankSignFlipped);
             }
             return moves;
         }
 
-        private List<SquareChange> FlipRankSign(Tuple<int, int> moveBaseCase, int fileSign)
+        private List<SquareRelative> FlipRankSign(Tuple<int, int> moveBaseCase, int fileSign)
         {
-            var moves = new List<SquareChange>();
+            var moves = new List<SquareRelative>();
             foreach (var sign in signs)
             {
-                SquareChange move = new SquareChange(fileSign * moveBaseCase.Item1, sign * moveBaseCase.Item2);
+                SquareRelative move = new SquareRelative(fileSign * moveBaseCase.Item1, sign * moveBaseCase.Item2);
                 moves.Add(move);
             }
             return moves;

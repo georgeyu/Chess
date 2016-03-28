@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Positions
+namespace Chess.Positions.Pieces
 {
     [DebuggerDisplay("FileChange = {FileChange}, RankChange = {RankChange}")]
-    internal class SquareChange
+    internal class SquareRelative
     {
-        public SquareChange(int fileChange, int rankChange)
+        public SquareRelative(int fileChange, int rankChange)
         {
             FileChange = fileChange;
             RankChange = rankChange;
@@ -26,7 +26,7 @@ namespace Chess.Positions
             {
                 return false;
             }
-            var squareChange = obj as SquareChange;
+            var squareChange = obj as SquareRelative;
             if ((object)squareChange == null)
             {
                 return false;

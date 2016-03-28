@@ -114,40 +114,40 @@ namespace ChessTest
         [TestMethod]
         public void GetHorizontalVerticalMoves_MaxRange_Count()
         {
-            SquareChange[][] moves = MoveCreator.GetHorizontalVerticalMoves(Constants.BoardDimension - 1);
+            SquareRelative[][] moves = MoveCreator.GetHorizontalVerticalMoves(Constants.BoardDimension - 1);
             Assert.IsTrue(moves.Length == (Constants.BoardDimension - 1) * HorizontalVerticalVectors);
         }
 
         [TestMethod]
         public void GetDiagonalMoves_MaxRange_Count()
         {
-            SquareChange[][] moves = MoveCreator.GetDiagonalMoves(Constants.BoardDimension - 1);
+            SquareRelative[][] moves = MoveCreator.GetDiagonalMoves(Constants.BoardDimension - 1);
             Assert.IsTrue(moves.Length == (Constants.BoardDimension - 1) * DiagonalVectors);
         }
 
         [TestMethod]
         public void GetHorizontalVerticalCaptures_MaxRange_Count()
         {
-            Capture[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.BoardDimension - 1);
+            CaptureRelative[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.BoardDimension - 1);
             Assert.IsTrue(captures.Length == (Constants.BoardDimension - 1) * HorizontalVerticalVectors);
         }
 
         [TestMethod]
         public void GetDiagonalCaptures_MaxRange_Count()
         {
-            Capture[] captures = MoveCreator.GetDiagonalCaptures(Constants.BoardDimension - 1);
+            CaptureRelative[] captures = MoveCreator.GetDiagonalCaptures(Constants.BoardDimension - 1);
             Assert.IsTrue(captures.Length == (Constants.BoardDimension - 1) * DiagonalVectors);
         }
 
         private void TestMoves(Piece piece, int count)
         {
-            SquareChange[][] moves = piece.GetMoves();
+            SquareRelative[][] moves = piece.GetMoves();
             Assert.IsTrue(moves.Length == count);
         }
 
         private void TestCaptures(Piece piece, int count)
         {
-            Capture[] captures = piece.GetCaptures();
+            CaptureRelative[] captures = piece.GetCaptures();
             Assert.IsTrue(captures.Length == count);
         }
     }

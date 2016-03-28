@@ -14,6 +14,7 @@ namespace ChessTest
         private const int PawnCount = Constants.BoardDimension * 2;
         private const int DoublePieceCount = 2 * 2;
         private const int SinglePieceCount = 2;
+        private const int StartBoardMoveCount = 20;
 
         [TestMethod]
         public void Position_Empty_BoardSize()
@@ -62,6 +63,14 @@ namespace ChessTest
         public void Position_Empty_KingCount()
         {
             CountSquares(SinglePieceCount, x => x is King);
+        }
+
+        [TestMethod]
+        public void GetMoves_StartBoard_Count()
+        {
+            var position = new Position();
+            MoveAbsolute[] moves = position.GetMoves();
+            Assert.IsTrue(moves.Length == StartBoardMoveCount);
         }
 
         private void CountSquares(int expectedCount, Func<Square, bool> checkSquareType)
