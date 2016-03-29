@@ -10,6 +10,9 @@ namespace Chess.Positions.Pieces
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class Rook : Piece
     {
+        private const string FenWhite = "R";
+        private const string FenBlack = "r";
+
         public Rook(bool isWhite, bool hasMoved)
         {
             IsWhite = isWhite;
@@ -30,6 +33,11 @@ namespace Chess.Positions.Pieces
         {
             CaptureRelative[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.BoardDimension - 1);
             return captures;
+        }
+
+        public string GetFen()
+        {
+            return IsWhite ? FenWhite : FenBlack;
         }
     }
 }

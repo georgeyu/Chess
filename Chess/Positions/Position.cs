@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Chess.Positions
@@ -23,6 +24,7 @@ namespace Chess.Positions
         private const int KingFile = 4;
         private const int FileIndex = 0;
         private const int RankIndex = 1;
+        private const string FenRankSeparator = "/";
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public Position()
@@ -74,6 +76,24 @@ namespace Chess.Positions
             piece.HasMoved = true;
             Board[finalSquare.File, finalSquare.Rank] = piece;
             IncrementTurn();
+        }
+
+        /// <summary>
+        /// Get FEN for current position.
+        /// </summary>
+        public string GetFen()
+        {
+            int files = Board.GetLength(FileIndex);
+            int ranks = Board.GetLength(RankIndex);
+            var fileFens = new List<string>();
+            for (var i = files - 1; i >= 0; i--)
+            {
+                string fileFen = GetRankFen(i);
+                fileFens.Add(fileFen);
+            }
+            string boardFen = String.Join(FenRankSeparator, fileFens);
+            string fen = ReplaceConsecutiveEmptySquaresWithIntegers(boardFen);
+            return fen;
         }
 
         private void SetupStartPosition()
@@ -280,6 +300,41 @@ namespace Chess.Positions
                 TurnNumber++;
             }
             IsWhiteTurn = !IsWhiteTurn;
+        }
+
+        private string GetRankFen(int rank)
+        {
+            int files = Board.GetLength(FileIndex);
+            string fen = String.Empty;
+            for (var i = 0; i < files; i++)
+            {
+                string squareFen = Board[i, rank].GetFen();
+                fen += squareFen;
+            }
+            return fen;
+        }
+
+        private string ReplaceConsecutiveEmptySquaresWithIntegers(string fenWithEmptySquares)
+        {
+            int emptyCountInt = 0;
+            string[] fenSplit = Regex.Split(fenWithEmptySquares, String.Empty);
+            string fen = String.Empty;
+            foreach (string square in fenSplit)
+            {
+                if (square == Constants.EmptySquare)
+                {
+                    emptyCountInt++;
+                    continue;
+                }
+                if (emptyCountInt != 0)
+                {
+                    var emptyCountString = emptyCountInt.ToString();
+                    emptyCountInt = 0;
+                    fen += emptyCountString;
+                }
+                fen += square;
+            }
+            return fen;
         }
     }
 }

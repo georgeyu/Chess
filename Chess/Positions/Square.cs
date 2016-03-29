@@ -8,5 +8,6 @@ namespace Chess.Positions
 {
     internal interface Square
     {
+        string GetFen();
     }
 }

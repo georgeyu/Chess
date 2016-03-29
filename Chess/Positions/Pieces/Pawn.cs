@@ -11,6 +11,8 @@ namespace Chess.Positions.Pieces
     internal class Pawn : Piece
     {
         private const int SpecialChange = 2;
+        private const string FenWhite = "P";
+        private const string FenBlack = "p";
 
         public Pawn(bool isWhite, bool hasMoved)
         {
@@ -48,6 +50,11 @@ namespace Chess.Positions.Pieces
             CaptureRelative rightCapture = new CaptureRelative(rightSquareChange, new SquareRelative[] { });
             CaptureRelative[] captures = { leftCapture, rightCapture };
             return captures;
+        }
+
+        public string GetFen()
+        {
+            return IsWhite ? FenWhite : FenBlack;
         }
 
         private int GetDirection()

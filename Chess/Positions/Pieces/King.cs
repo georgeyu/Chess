@@ -11,6 +11,8 @@ namespace Chess.Positions.Pieces
     internal class King : Piece
     {
         private const int KingRange = 1;
+        private const string FenWhite = "K";
+        private const string FenBlack = "k";
 
         public King(bool isWhite, bool hasMoved)
         {
@@ -32,6 +34,11 @@ namespace Chess.Positions.Pieces
         {
             CaptureRelative[] captures = GetActions(MoveCreator.GetHorizontalVerticalCaptures, MoveCreator.GetDiagonalCaptures);
             return captures;
+        }
+
+        public string GetFen()
+        {
+            return IsWhite ? FenWhite : FenBlack;
         }
 
         private T[] GetActions<T>(Func<int, T[]> getHorizontalVerticalActions, Func<int, T[]> getDiagonalActions)

@@ -15,6 +15,7 @@ namespace ChessTest
         private const int DoublePieceCount = 2 * 2;
         private const int SinglePieceCount = 2;
         private const int StartBoardMoveCount = 20;
+        private const string StartBoardFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
         [TestMethod]
         public void Position_Empty_BoardSize()
@@ -71,6 +72,14 @@ namespace ChessTest
             var position = new Position();
             MoveAbsolute[] moves = position.GetMoves();
             Assert.IsTrue(moves.Length == StartBoardMoveCount);
+        }
+
+        [TestMethod]
+        public void PositionGetFen_StartBoard_GetFen()
+        {
+            Position position = new Position();
+            string fen = position.GetFen();
+            Assert.IsTrue(fen == StartBoardFen);
         }
 
         private void CountSquares(int expectedCount, Func<Square, bool> checkSquareType)

@@ -10,6 +10,9 @@ namespace Chess.Positions.Pieces
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class Bishop : Piece
     {
+        private const string FenWhite = "B";
+        private const string FenBlack = "b";
+
         public Bishop(bool isWhite, bool hasMoved)
         {
             IsWhite = isWhite;
@@ -30,6 +33,11 @@ namespace Chess.Positions.Pieces
         {
             CaptureRelative[] captures = MoveCreator.GetDiagonalCaptures(Constants.BoardDimension - 1);
             return captures;
+        }
+
+        public string GetFen()
+        {
+            return IsWhite ? FenWhite : FenBlack;
         }
     }
 }

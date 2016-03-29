@@ -12,6 +12,8 @@ namespace Chess.Positions.Pieces
     {
         private const int Short = 1;
         private const int Long = 2;
+        private const string FenWhite = "N";
+        private const string FenBlack = "n";
         private int[] signs = { -1, 1 };
 
         public Knight(bool isWhite, bool hasMoved)
@@ -38,6 +40,11 @@ namespace Chess.Positions.Pieces
             IEnumerable<CaptureRelative> capturesEnumerable = finalSquares.Select(x => new CaptureRelative(x, new SquareRelative[] { }));
             CaptureRelative[] capturesArray = capturesEnumerable.ToArray();
             return capturesArray;
+        }
+
+        public string GetFen()
+        {
+            return IsWhite ? FenWhite : FenBlack;
         }
 
         private List<SquareRelative> GetFinalSquares()

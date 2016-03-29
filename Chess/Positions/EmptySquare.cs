@@ -8,5 +8,9 @@ namespace Chess.Positions
 {
     internal class EmptySquare : Square
     {
+        public string GetFen()
+        {
+            return Constants.EmptySquare;
+        }
     }
 }

@@ -10,6 +10,9 @@ namespace Chess.Positions.Pieces
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class Queen : Piece
     {
+        private const string FenWhite = "Q";
+        private const string FenBlack = "q";
+
         public Queen(bool isWhite, bool hasMoved)
         {
             IsWhite = isWhite;
@@ -30,6 +33,11 @@ namespace Chess.Positions.Pieces
         {
             CaptureRelative[] captures = GetActions(MoveCreator.GetHorizontalVerticalCaptures, MoveCreator.GetDiagonalCaptures);
             return captures;
+        }
+
+        public string GetFen()
+        {
+            return IsWhite ? FenWhite : FenBlack;
         }
 
         private T[] GetActions<T>(Func<int, T[]> getHorizontalVerticalActions, Func<int, T[]> getDiagonalActions)
