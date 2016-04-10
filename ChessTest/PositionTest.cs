@@ -4,6 +4,7 @@ using Chess.Positions;
 using Chess;
 using Chess.Positions.Pieces;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace ChessTest
 {
@@ -16,6 +17,17 @@ namespace ChessTest
         private const int SinglePieceCount = 2;
         private const int StartBoardMoveCount = 20;
         private const string StartBoardFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+        private const string RuyLopezFen = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R";
+        private const string files = "abcdefgh";
+        private readonly Dictionary<string, SquareAbsolute> squareByString = new Dictionary<string, SquareAbsolute>();
+
+        public PositionTest()
+        {
+            for (int i = 0; i < files.Length; i++)
+            {
+                LoopSquaresByFile(i);
+            }
+        }
 
         [TestMethod]
         public void Position_Empty_BoardSize()
@@ -82,6 +94,35 @@ namespace ChessTest
             Assert.IsTrue(fen == StartBoardFen);
         }
 
+        [TestMethod]
+        public void PositionGetFen_Najdorf_GetFen()
+        {
+            Position position = new Position();
+            MoveAbsolute white1 = new MoveAbsolute(
+                squareByString["e2"],
+                new SquareAbsolute[] { squareByString["e3"], squareByString["e4"] });
+            position.MakeMove(white1);
+            MoveAbsolute black1 = new MoveAbsolute(
+                squareByString["e7"],
+                new SquareAbsolute[] { squareByString["e6"], squareByString["e5"] });
+            position.MakeMove(black1);
+            MoveAbsolute white2 = new MoveAbsolute(squareByString["g1"], new SquareAbsolute[] { squareByString["f3"] });
+            position.MakeMove(white2);
+            MoveAbsolute black2 = new MoveAbsolute(squareByString["b8"], new SquareAbsolute[] { squareByString["c6"] });
+            position.MakeMove(black2);
+            MoveAbsolute white3 = new MoveAbsolute(
+                squareByString["f1"],
+                new SquareAbsolute[] {
+                    squareByString["e2"],
+                    squareByString["d3"],
+                    squareByString["c4"],
+                    squareByString["b5"]
+                });
+            position.MakeMove(white3);
+            string fen = position.GetFen();
+            Assert.IsTrue(fen == RuyLopezFen);
+        }
+
         private void CountSquares(int expectedCount, Func<Square, bool> checkSquareType)
         {
             Position position = new Position();
@@ -91,6 +132,15 @@ namespace ChessTest
                 count = checkSquareType(square) ? count + 1 : count;
             }
             Assert.IsTrue(count == expectedCount);
+        }
+
+        private void LoopSquaresByFile(int file)
+        {
+            for (int i = 0; i < Constants.BoardDimension; i++)
+            {
+                string id = files[file] + (i + 1).ToString();
+                squareByString[id] = new SquareAbsolute(file, i);
+            }
         }
     }
 }
