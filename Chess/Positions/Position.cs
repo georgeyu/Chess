@@ -63,6 +63,19 @@ namespace Chess.Positions
         }
 
         /// <summary>
+        /// Gets legal captures.
+        /// </summary>
+        public CaptureAbsolute[] GetCaptures()
+        {
+            List<CaptureAbsolute> capturesIgnoringLegality = GetCapturesIgnoringLegality();
+            List<CaptureAbsolute> capturesStayingOnBoard = GetCapturesStayingOnBoard(capturesIgnoringLegality);
+            List<CaptureAbsolute> capturesWherePassingSquaresAreEmpty = GetCapturesWherePassingSquaresAreEmpty(capturesStayingOnBoard);
+            List<CaptureAbsolute> capturesWhereFinalSquareIsEnemyPiece = GetCapturesWhereFinalSquareIsEnemyPiece(capturesWherePassingSquaresAreEmpty);
+            var captures = capturesWhereFinalSquareIsEnemyPiece.ToArray();
+            return captures;
+        }
+
+        /// <summary>
         /// Changes the position to match the move made.
         /// </summary>
         /// <param name="move">Move to make.</param>
@@ -189,7 +202,6 @@ namespace Chess.Positions
         /// <summary>
         /// Gets all moves for the pieces on the board of the current color.
         /// </summary>
-        /// <returns></returns>
         private List<MoveAbsolute> GetMovesIgnoringLegality()
         {
             var moves = new List<MoveAbsolute>();
@@ -206,7 +218,6 @@ namespace Chess.Positions
         /// Gets all moves for the pieces on the file of the current color.
         /// </summary>
         /// <param name="file"></param>
-        /// <returns></returns>
         private List<MoveAbsolute> GetMovesOnFile(int file)
         {
             int ranks = Board.GetLength(RankIndex);
@@ -223,8 +234,7 @@ namespace Chess.Positions
         /// If a square has a piece, then get the moves for the current turn.
         /// </summary>
         /// <param name="square">Square to check for piece and current turn color.</param>
-        /// <returns></returns>
-        private List<MoveAbsolute>GetMovesFromSquare(Square square, int file, int rank)
+        private List<MoveAbsolute> GetMovesFromSquare(Square square, int file, int rank)
         {
             var movesAbsolute = new List<MoveAbsolute>();
             bool isEmpty = square is EmptySquare;
@@ -265,6 +275,17 @@ namespace Chess.Positions
             return movesWherePassingSquaresAreEmpty;
         }
 
+        private List<CaptureAbsolute> GetCapturesWherePassingSquaresAreEmpty(List<CaptureAbsolute> captures)
+        {
+            var capturesWherePassingSquaresAreEmpty = new List<CaptureAbsolute>();
+            foreach (CaptureAbsolute capture in captures)
+            {
+                List<CaptureAbsolute> captureWherePassingSquaresAreEmpty = GetCaptureWherePassingSquaresAreEmpty(capture);
+                capturesWherePassingSquaresAreEmpty.AddRange(captureWherePassingSquaresAreEmpty);
+            }
+            return capturesWherePassingSquaresAreEmpty;
+        }
+
         private List<MoveAbsolute> GetMoveWherePassingSquaresAreEmpty(MoveAbsolute move)
         {
             var moves = new List<MoveAbsolute>();
@@ -277,6 +298,22 @@ namespace Chess.Positions
             return moves;
         }
 
+        private List<CaptureAbsolute> GetCaptureWherePassingSquaresAreEmpty(CaptureAbsolute capture)
+        {
+            var captures = new List<CaptureAbsolute>();
+            var arePassingSquaresEmpty = capture.PassingSquares.Select(x => Board[x.File, x.Rank] is EmptySquare);
+            if (arePassingSquaresEmpty.Count() != 0)
+            {
+                var areAllPassingSquaresEmpty = arePassingSquaresEmpty.Aggregate((x, y) => x && y);
+                if (!areAllPassingSquaresEmpty)
+                {
+                    return captures;
+                }
+            }
+            captures.Add(capture);
+            return captures;
+        }
+
         private List<MoveAbsolute> GetMovesStayingOnBoard(List<MoveAbsolute> moves)
         {
             var movesStayingOnBoard = new List<MoveAbsolute>();
@@ -286,6 +323,17 @@ namespace Chess.Positions
                 movesStayingOnBoard.AddRange(moveStayingOnBoard);
             }
             return movesStayingOnBoard;
+        }
+
+        private List<CaptureAbsolute> GetCapturesStayingOnBoard(List<CaptureAbsolute> captures)
+        {
+            var capturesStayingOnBoard = new List<CaptureAbsolute>();
+            foreach (CaptureAbsolute capture in captures)
+            {
+                List<CaptureAbsolute> captureStayingOnBoard = GetCaptureStayingOnBoard(capture);
+                capturesStayingOnBoard.AddRange(captureStayingOnBoard);
+            }
+            return capturesStayingOnBoard;
         }
 
         private List<MoveAbsolute> GetMoveStayingOnBoard(MoveAbsolute move)
@@ -304,6 +352,35 @@ namespace Chess.Positions
                 moveStayingOnBoard.Add(move);
             }
             return moveStayingOnBoard;
+        }
+
+        private List<CaptureAbsolute> GetCaptureStayingOnBoard(CaptureAbsolute capture)
+        {
+            var captureStayingOnBoard = new List<CaptureAbsolute>();
+            int files = Board.GetLength(FileIndex);
+            int ranks = Board.GetLength(RankIndex);
+            if (capture.PassingSquares.Length != 0)
+            {
+                var doPassingSquaresStayOnBoard = capture.PassingSquares.Select(x => (
+                (x.File < files) &&
+                (x.Rank < ranks) &&
+                (x.File >= 0) &&
+                (x.Rank >= 0)));
+                bool doAllPassingSquaresStayOnBoard = doPassingSquaresStayOnBoard.Aggregate((x, y) => x && y);
+                if (!doAllPassingSquaresStayOnBoard)
+                {
+                    return captureStayingOnBoard;
+                }
+            }
+            bool doesFinalSquareStayOnBoard = (capture.FinalSquare.File < files) &&
+                (capture.FinalSquare.File >= 0) &&
+                (capture.FinalSquare.Rank < ranks) &&
+                (capture.FinalSquare.Rank >= 0);
+            if (doesFinalSquareStayOnBoard)
+            {
+                captureStayingOnBoard.Add(capture);
+            }
+            return captureStayingOnBoard;
         }
 
         private void IncrementTurn()
@@ -348,6 +425,96 @@ namespace Chess.Positions
                 fen += square;
             }
             return fen;
+        }
+
+        /// <summary>
+        /// Gets all captures for the pieces on the board of the current color.
+        /// </summary>
+        private List<CaptureAbsolute> GetCapturesIgnoringLegality()
+        {
+            var captures = new List<CaptureAbsolute>();
+            int files = Board.GetLength(FileIndex);
+            for (int i = 0; i < files; i++)
+            {
+                List<CaptureAbsolute> capturesOnFile = GetCapturesOnFile(i);
+                captures.AddRange(capturesOnFile);
+            }
+            return captures;
+        }
+
+        /// <summary>
+        /// Gets all captures for the pieces on the file of the current color.
+        /// </summary>
+        /// <param name="file">File to get all captures on.</param>
+        private List<CaptureAbsolute> GetCapturesOnFile(int file)
+        {
+            int ranks = Board.GetLength(RankIndex);
+            var captures = new List<CaptureAbsolute>();
+            for (var i = 0; i < ranks; i++)
+            {
+                List<CaptureAbsolute> capturesFromSquare = GetCapturesFromSquare(Board[file, i], file, i);
+                captures.AddRange(capturesFromSquare);
+            }
+            return captures;
+        }
+
+        /// <summary>
+        /// If a square has a piece, then get the captures for the current turn.
+        /// </summary>
+        /// <param name="square">Square to check for piece and current turn color.</param>
+        private List<CaptureAbsolute> GetCapturesFromSquare(Square square, int file, int rank)
+        {
+            var capturesAbsolute = new List<CaptureAbsolute>();
+            bool isEmpty = square is EmptySquare;
+            if (isEmpty)
+            {
+                return capturesAbsolute;
+            }
+            Piece piece = square as Piece;
+            if (piece == null)
+            {
+                log.Error("Square not recognized");
+            }
+            if (piece.IsWhite != IsWhiteTurn)
+            {
+                return capturesAbsolute;
+            }
+            CaptureRelative[] capturesRelative = piece.GetCaptures();
+            var startSquare = new SquareAbsolute(file, rank);
+            foreach (var captureRelative in capturesRelative)
+            {
+                var passingSquaresEnumerable = captureRelative.PassingSquares.Select(
+                    x => new SquareAbsolute(file + x.FileChange, rank + x.RankChange));
+                var passingSquaresArray = passingSquaresEnumerable.ToArray();
+                var finalSquare = new SquareAbsolute(
+                    file + captureRelative.FinalSquare.FileChange,
+                    rank + captureRelative.FinalSquare.RankChange);
+                var captureAbsolute = new CaptureAbsolute(startSquare, finalSquare, passingSquaresArray);
+                capturesAbsolute.Add(captureAbsolute);
+            }
+            return capturesAbsolute;
+        }
+
+        private List<CaptureAbsolute> GetCapturesWhereFinalSquareIsEnemyPiece(List<CaptureAbsolute> captures)
+        {
+            var capturesWhereFinalSquareIsEnemyPiece = new List<CaptureAbsolute>();
+            foreach (CaptureAbsolute capture in captures)
+            {
+                var finalSquare = Board[capture.FinalSquare.File, capture.FinalSquare.Rank];
+                var isEmptySquare = finalSquare is EmptySquare;
+                if (isEmptySquare)
+                {
+                    continue;
+                }
+                Square startSquare = Board[capture.StartSquare.File, capture.StartSquare.Rank];
+                var startPiece = startSquare as Piece;
+                var finalPiece = finalSquare as Piece;
+                if (startPiece.IsWhite != finalPiece.IsWhite)
+                {
+                    capturesWhereFinalSquareIsEnemyPiece.Add(capture);
+                }
+            }
+            return capturesWhereFinalSquareIsEnemyPiece;
         }
     }
 }

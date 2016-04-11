@@ -13,7 +13,6 @@ namespace Chess.Positions.Pieces
         /// Get moves along the horizontal and vertical directions.
         /// </summary>
         /// <param name="length">Max distance along the directions.</param>
-        /// <returns></returns>
         public static SquareRelative[][] GetHorizontalVerticalMoves(int length)
         {
             SquareRelative[][] moves = GetMoves(length, GetHorizontalVerticalFinalSquaresSet);
@@ -24,7 +23,6 @@ namespace Chess.Positions.Pieces
         /// Get moves along the diagonal directions.
         /// </summary>
         /// <param name="length">Max distance along the directions.</param>
-        /// <returns></returns>
         public static SquareRelative[][] GetDiagonalMoves(int length)
         {
             SquareRelative[][] moves = GetMoves(length, GetDiagonalFinalSquaresSet);
@@ -35,7 +33,6 @@ namespace Chess.Positions.Pieces
         /// Get captures along the horizontal and vertical directions.
         /// </summary>
         /// <param name="length">Max distance along the directions.</param>
-        /// <returns></returns>
         public static CaptureRelative[] GetHorizontalVerticalCaptures(int length)
         {
             CaptureRelative[] captures = GetCaptures(length, GetHorizontalVerticalFinalSquaresSet);
@@ -46,7 +43,6 @@ namespace Chess.Positions.Pieces
         /// Get captures along the diagonal directions.
         /// </summary>
         /// <param name="length">Max distance along the directions.</param>
-        /// <returns></returns>
         public static CaptureRelative[] GetDiagonalCaptures(int length)
         {
             CaptureRelative[] captures = GetCaptures(length, GetDiagonalFinalSquaresSet);
@@ -58,7 +54,6 @@ namespace Chess.Positions.Pieces
         /// </summary>
         /// <param name="length">Max distance for moves.</param>
         /// <param name="getFinalSquaresSet">Get final squares in certain directions.</param>
-        /// <returns></returns>
         private static SquareRelative[][] GetMoves(int length, Func<int, List<List<SquareRelative>>> getFinalSquaresSet)
         {
             SquareRelative[][] moves = GetActions(length, getFinalSquaresSet, ExpandToMoves);
@@ -70,7 +65,6 @@ namespace Chess.Positions.Pieces
         /// </summary>
         /// <param name="length">Max distance for Captures.</param>
         /// <param name="getFinalSquaresSet">Get final squares in certain directions.</param>
-        /// <returns></returns>
         private static CaptureRelative[] GetCaptures(int length, Func<int, List<List<SquareRelative>>> getFinalSquaresSet)
         {
             CaptureRelative[] captures = GetActions(length, getFinalSquaresSet, ExpandToCaptures);
@@ -84,7 +78,6 @@ namespace Chess.Positions.Pieces
         /// <param name="length">Max distance for action.</param>
         /// <param name="getFinalSquaresSet">Get final squares in certain directions.</param>
         /// <param name="expand">Get all actions leading up to the final squares.</param>
-        /// <returns></returns>
         private static T[] GetActions<T>(
             int length,
             Func<int, List<List<SquareRelative>>> getFinalSquaresSet,
@@ -105,7 +98,6 @@ namespace Chess.Positions.Pieces
         /// Expand the squares along a direction into moves. One move for each square.
         /// </summary>
         /// <param name="longestMove">All squares leading to the final square.</param>
-        /// <returns></returns>
         private static List<SquareRelative[]> ExpandToMoves(List<SquareRelative> longestMove)
         {
             var expansions = new List<SquareRelative[]>();
@@ -122,7 +114,6 @@ namespace Chess.Positions.Pieces
         /// Expand the squares along a direction into Captures. One capture for each square.
         /// </summary>
         /// <param name="longestMove">All squares leading to the final square.</param>
-        /// <returns></returns>
         private static List<CaptureRelative> ExpandToCaptures(List<SquareRelative> longestMove)
         {
             var expansions = new List<CaptureRelative>();
@@ -141,7 +132,6 @@ namespace Chess.Positions.Pieces
         /// Get a list of list of squares for horizontal and vertical directions. One list for each direction.
         /// </summary>
         /// <param name="length">Max distance along the directions.</param>
-        /// <returns></returns>
         private static List<List<SquareRelative>> GetHorizontalVerticalFinalSquaresSet(int length)
         {
             var finalSquaresSet = new List<List<SquareRelative>>();
@@ -160,7 +150,6 @@ namespace Chess.Positions.Pieces
         /// Get a list of list of squares for diagonal directions. One list for each direction.
         /// </summary>
         /// <param name="length">Max distance along the directions.</param>
-        /// <returns></returns>
         private static List<List<SquareRelative>> GetDiagonalFinalSquaresSet(int length)
         {
             var finalSquaresSet = new List<List<SquareRelative>>();
@@ -180,7 +169,6 @@ namespace Chess.Positions.Pieces
         /// </summary>
         /// <param name="length">Distance of the last square.</param>
         /// <param name="getFinalSquare">Get the last square from the distance.</param>
-        /// <returns></returns>
         private static List<SquareRelative> GetFinalSquares(int length, Func<int, SquareRelative> getFinalSquare)
         {
             var finalSquares = new List<SquareRelative>();
@@ -196,7 +184,6 @@ namespace Chess.Positions.Pieces
         /// Get the SquareChange in the north direction.
         /// </summary>
         /// <param name="length"></param>
-        /// <returns></returns>
         private static SquareRelative GetNorth(int length)
         {
             var north = new SquareRelative(0, length);
@@ -207,7 +194,6 @@ namespace Chess.Positions.Pieces
         /// Get the SquareChange in the south direction.
         /// </summary>
         /// <param name="length"></param>
-        /// <returns></returns>
         private static SquareRelative GetSouth(int length)
         {
             var south = new SquareRelative(0, -length);
@@ -218,7 +204,6 @@ namespace Chess.Positions.Pieces
         /// Get the SquareChange in the east direction.
         /// </summary>
         /// <param name="length"></param>
-        /// <returns></returns>
         private static SquareRelative GetEast(int length)
         {
             var east = new SquareRelative(length, 0);
@@ -229,7 +214,6 @@ namespace Chess.Positions.Pieces
         /// Get the SquareChange in the west direction.
         /// </summary>
         /// <param name="length"></param>
-        /// <returns></returns>
         private static SquareRelative GetWest(int length)
         {
             var west = new SquareRelative(-length, 0);
@@ -240,7 +224,6 @@ namespace Chess.Positions.Pieces
         /// Get the SquareChange in the northeast direction.
         /// </summary>
         /// <param name="length"></param>
-        /// <returns></returns>
         private static SquareRelative GetNorthEast(int length)
         {
             var northEast = new SquareRelative(length, length);
@@ -251,7 +234,6 @@ namespace Chess.Positions.Pieces
         /// Get the SquareChange in the northwest direction.
         /// </summary>
         /// <param name="length"></param>
-        /// <returns></returns>
         private static SquareRelative GetNorthWest(int length)
         {
             var northWest = new SquareRelative(-length, length);
@@ -262,7 +244,6 @@ namespace Chess.Positions.Pieces
         /// Get the SquareChange in the southeast direction.
         /// </summary>
         /// <param name="length"></param>
-        /// <returns></returns>
         private static SquareRelative GetSouthEast(int length)
         {
             var southEast = new SquareRelative(length, -length);
@@ -273,7 +254,6 @@ namespace Chess.Positions.Pieces
         /// Get the SquareChange in the southwest direction.
         /// </summary>
         /// <param name="length"></param>
-        /// <returns></returns>
         private static SquareRelative GetSouthWest(int length)
         {
             var southWest = new SquareRelative(-length, -length);
