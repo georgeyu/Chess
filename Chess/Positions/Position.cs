@@ -68,11 +68,10 @@ namespace Chess.Positions
         /// <param name="move">Move to make.</param>
         public void MakeMove(MoveAbsolute move)
         {
-            var square = Board[move.StartSquare.File, move.StartSquare.Rank];
-            var emptySquare = new EmptySquare();
-            Board[move.StartSquare.File, move.StartSquare.Rank] = emptySquare;
+            var startSquare = Board[move.StartSquare.File, move.StartSquare.Rank];
+            Board[move.StartSquare.File, move.StartSquare.Rank] = new EmptySquare();
             SquareAbsolute finalSquare = move.PassingSquares.Last();
-            var piece = square as Piece;
+            var piece = startSquare as Piece;
             piece.HasMoved = true;
             Board[finalSquare.File, finalSquare.Rank] = piece;
             IncrementTurn();
@@ -94,6 +93,20 @@ namespace Chess.Positions
             string boardFen = String.Join(FenRankSeparator, fileFens);
             string fen = ReplaceConsecutiveEmptySquaresWithIntegers(boardFen);
             return fen;
+        }
+
+        /// <summary>
+        /// Changes the position to match the capture made.
+        /// </summary>
+        /// <param name="capture">Capture to make.</param>
+        public void MakeCapture(CaptureAbsolute capture)
+        {
+            var startSquare = Board[capture.StartSquare.File, capture.StartSquare.Rank];
+            var piece = startSquare as Piece;
+            Board[capture.StartSquare.File, capture.StartSquare.Rank] = new EmptySquare();
+            piece.HasMoved = true;
+            Board[capture.FinalSquare.File, capture.FinalSquare.Rank] = piece;
+            IncrementTurn();
         }
 
         private void SetupStartPosition()

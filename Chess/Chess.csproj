@@ -89,6 +89,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Positions\CaptureAbsolute.cs" />
     <Compile Include="Positions\EmptySquare.cs" />
     <Compile Include="Positions\MoveAbsolute.cs" />
     <Compile Include="Positions\Pieces\Bishop.cs" />
