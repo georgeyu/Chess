@@ -1,4 +1,4 @@
-﻿using Chess.Positions;
+﻿using Chess.Game;
 using log4net;
 using log4net.Config;
 using System;

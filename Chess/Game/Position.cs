@@ -1,4 +1,4 @@
-﻿using Chess.Positions.Pieces;
+﻿using Chess.Game.Pieces;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Chess.Positions
+namespace Chess.Game
 {
     internal class Position
     {

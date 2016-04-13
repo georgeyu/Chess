@@ -5,15 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Positions.Pieces
+namespace Chess.Game.Pieces
 {
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Queen : Piece
+    internal class King : Piece
     {
-        private const string FenWhite = "Q";
-        private const string FenBlack = "q";
+        private const int KingRange = 1;
+        private const string FenWhite = "K";
+        private const string FenBlack = "k";
 
-        public Queen(bool isWhite, bool hasMoved)
+        public King(bool isWhite, bool hasMoved)
         {
             IsWhite = isWhite;
             HasMoved = hasMoved;
@@ -42,8 +43,8 @@ namespace Chess.Positions.Pieces
 
         private T[] GetActions<T>(Func<int, T[]> getHorizontalVerticalActions, Func<int, T[]> getDiagonalActions)
         {
-            T[] horizontalVerticalActions = getHorizontalVerticalActions(Constants.BoardDimension - 1);
-            T[] diagonalActions = getDiagonalActions(Constants.BoardDimension - 1);
+            T[] horizontalVerticalActions = getHorizontalVerticalActions(KingRange);
+            T[] diagonalActions = getDiagonalActions(KingRange);
             IEnumerable<T> actionsEnumerable = horizontalVerticalActions.Concat(diagonalActions);
             var actionsArray = actionsEnumerable.ToArray();
             return actionsArray;

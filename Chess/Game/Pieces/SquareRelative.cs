@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Positions.Pieces
+namespace Chess.Game.Pieces
 {
     [DebuggerDisplay("FileChange = {FileChange}, RankChange = {RankChange}")]
     internal class SquareRelative

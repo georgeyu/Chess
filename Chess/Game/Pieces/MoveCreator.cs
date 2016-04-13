@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Positions.Pieces
+namespace Chess.Game.Pieces
 {
     // A move is an array of SquareChanges. An action is either a move or a Capture.
     internal static class MoveCreator

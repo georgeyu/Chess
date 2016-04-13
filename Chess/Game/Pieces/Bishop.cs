@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Positions.Pieces
+namespace Chess.Game.Pieces
 {
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Rook : Piece
+    internal class Bishop : Piece
     {
-        private const string FenWhite = "R";
-        private const string FenBlack = "r";
+        private const string FenWhite = "B";
+        private const string FenBlack = "b";
 
-        public Rook(bool isWhite, bool hasMoved)
+        public Bishop(bool isWhite, bool hasMoved)
         {
             IsWhite = isWhite;
             HasMoved = hasMoved;
@@ -25,13 +25,13 @@ namespace Chess.Positions.Pieces
 
         public SquareRelative[][] GetMoves()
         {
-            SquareRelative[][] moves = MoveCreator.GetHorizontalVerticalMoves(Constants.BoardDimension - 1);
+            SquareRelative[][] moves = MoveCreator.GetDiagonalMoves(Constants.BoardDimension - 1);
             return moves;
         }
 
         public CaptureRelative[] GetCaptures()
         {
-            CaptureRelative[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.BoardDimension - 1);
+            CaptureRelative[] captures = MoveCreator.GetDiagonalCaptures(Constants.BoardDimension - 1);
             return captures;
         }
 

@@ -89,22 +89,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Positions\CaptureAbsolute.cs" />
-    <Compile Include="Positions\EmptySquare.cs" />
-    <Compile Include="Positions\MoveAbsolute.cs" />
-    <Compile Include="Positions\Pieces\Bishop.cs" />
-    <Compile Include="Positions\Pieces\CaptureRelative.cs" />
-    <Compile Include="Positions\Pieces\King.cs" />
-    <Compile Include="Positions\Pieces\Knight.cs" />
-    <Compile Include="Positions\Pieces\MoveCreator.cs" />
-    <Compile Include="Positions\Pieces\Pawn.cs" />
-    <Compile Include="Positions\Pieces\Piece.cs" />
-    <Compile Include="Positions\Position.cs" />
-    <Compile Include="Positions\Pieces\Queen.cs" />
-    <Compile Include="Positions\Pieces\Rook.cs" />
-    <Compile Include="Positions\Square.cs" />
-    <Compile Include="Positions\Pieces\SquareRelative.cs" />
-    <Compile Include="Positions\SquareAbsolute.cs" />
+    <Compile Include="Game\CaptureAbsolute.cs" />
+    <Compile Include="Game\EmptySquare.cs" />
+    <Compile Include="Game\MoveAbsolute.cs" />
+    <Compile Include="Game\Pieces\Bishop.cs" />
+    <Compile Include="Game\Pieces\CaptureRelative.cs" />
+    <Compile Include="Game\Pieces\King.cs" />
+    <Compile Include="Game\Pieces\Knight.cs" />
+    <Compile Include="Game\Pieces\MoveCreator.cs" />
+    <Compile Include="Game\Pieces\Pawn.cs" />
+    <Compile Include="Game\Pieces\Piece.cs" />
+    <Compile Include="Game\Position.cs" />
+    <Compile Include="Game\Pieces\Queen.cs" />
+    <Compile Include="Game\Pieces\Rook.cs" />
+    <Compile Include="Game\Square.cs" />
+    <Compile Include="Game\Pieces\SquareRelative.cs" />
+    <Compile Include="Game\SquareAbsolute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

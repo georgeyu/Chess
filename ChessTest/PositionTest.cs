@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Chess.Positions;
+using Chess.Game;
 using Chess;
-using Chess.Positions.Pieces;
+using Chess.Game.Pieces;
 using System.Collections;
 using System.Collections.Generic;
 

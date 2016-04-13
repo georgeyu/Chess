@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Positions
+namespace Chess.Game
 {
     internal class EmptySquare : Square
     {
