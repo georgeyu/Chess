@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
-    // For both captures and moves, the passing squares must be unoccupied. Captures differ from moves in that the final
-    // square for a capture must be occupied by a piece of the opposite color.
+    /// <summary>
+    /// Represents a capture relative to a starting square.
+    /// </summary>
     internal class CaptureRelative
     {
-        public CaptureRelative(SquareRelative finalSquare, SquareRelative[] passingSquares)
+        public CaptureRelative(SquareChange captureSquare, SquareChange[] passingSquares)
         {
-            FinalSquare = finalSquare;
+            CaptureSquare = captureSquare;
             PassingSquares = passingSquares;
         }
 
-        public SquareRelative FinalSquare { get; private set; }
+        public SquareChange CaptureSquare { get; private set; }
 
-        public SquareRelative[] PassingSquares { get; private set; }
+        public SquareChange[] PassingSquares { get; private set; }
     }
 }

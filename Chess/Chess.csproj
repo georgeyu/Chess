@@ -96,14 +96,14 @@
     <Compile Include="Game\Pieces\CaptureRelative.cs" />
     <Compile Include="Game\Pieces\King.cs" />
     <Compile Include="Game\Pieces\Knight.cs" />
-    <Compile Include="Game\Pieces\MoveCreator.cs" />
+    <Compile Include="Game\Pieces\ActionGenerator.cs" />
     <Compile Include="Game\Pieces\Pawn.cs" />
     <Compile Include="Game\Pieces\Piece.cs" />
     <Compile Include="Game\Position.cs" />
     <Compile Include="Game\Pieces\Queen.cs" />
     <Compile Include="Game\Pieces\Rook.cs" />
     <Compile Include="Game\Square.cs" />
-    <Compile Include="Game\Pieces\SquareRelative.cs" />
+    <Compile Include="Game\Pieces\SquareChange.cs" />
     <Compile Include="Game\SquareAbsolute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

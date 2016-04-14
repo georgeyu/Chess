@@ -12,7 +12,7 @@ namespace Chess.Game.Pieces
 
         bool HasMoved { get; set; }
 
-        SquareRelative[][] GetMoves();
+        SquareChange[][] GetMoves();
 
         CaptureRelative[] GetCaptures();
     }

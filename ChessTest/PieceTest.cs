@@ -114,34 +114,34 @@ namespace ChessTest
         [TestMethod]
         public void GetHorizontalVerticalMoves_MaxRange_Count()
         {
-            SquareRelative[][] moves = MoveCreator.GetHorizontalVerticalMoves(Constants.BoardDimension - 1);
+            SquareChange[][] moves = ActionGenerator.GenerateStraightMoves(Constants.BoardDimension - 1);
             Assert.IsTrue(moves.Length == (Constants.BoardDimension - 1) * HorizontalVerticalVectors);
         }
 
         [TestMethod]
         public void GetDiagonalMoves_MaxRange_Count()
         {
-            SquareRelative[][] moves = MoveCreator.GetDiagonalMoves(Constants.BoardDimension - 1);
+            SquareChange[][] moves = ActionGenerator.GenerateDiagonalMoves(Constants.BoardDimension - 1);
             Assert.IsTrue(moves.Length == (Constants.BoardDimension - 1) * DiagonalVectors);
         }
 
         [TestMethod]
         public void GetHorizontalVerticalCaptures_MaxRange_Count()
         {
-            CaptureRelative[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.BoardDimension - 1);
+            CaptureRelative[] captures = ActionGenerator.GenerateStraightCaptures(Constants.BoardDimension - 1);
             Assert.IsTrue(captures.Length == (Constants.BoardDimension - 1) * HorizontalVerticalVectors);
         }
 
         [TestMethod]
         public void GetDiagonalCaptures_MaxRange_Count()
         {
-            CaptureRelative[] captures = MoveCreator.GetDiagonalCaptures(Constants.BoardDimension - 1);
+            CaptureRelative[] captures = ActionGenerator.GenerateDiagonalCaptures(Constants.BoardDimension - 1);
             Assert.IsTrue(captures.Length == (Constants.BoardDimension - 1) * DiagonalVectors);
         }
 
         private void TestMoves(Piece piece, int count)
         {
-            SquareRelative[][] moves = piece.GetMoves();
+            SquareChange[][] moves = piece.GetMoves();
             Assert.IsTrue(moves.Length == count);
         }
 

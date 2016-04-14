@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
+    /// <summary>
+    /// Represents board displacement relative to a starting square.
+    /// </summary>
     [DebuggerDisplay("FileChange = {FileChange}, RankChange = {RankChange}")]
-    internal class SquareRelative
+    internal class SquareChange
     {
-        public SquareRelative(int fileChange, int rankChange)
+        public SquareChange(int fileChange, int rankChange)
         {
             FileChange = fileChange;
             RankChange = rankChange;
@@ -26,7 +29,7 @@ namespace Chess.Game.Pieces
             {
                 return false;
             }
-            var squareChange = obj as SquareRelative;
+            var squareChange = obj as SquareChange;
             if ((object)squareChange == null)
             {
                 return false;

@@ -24,17 +24,17 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareRelative[][] GetMoves()
+        public SquareChange[][] GetMoves()
         {
-            var movesList = new List<SquareRelative[]>();
+            var movesList = new List<SquareChange[]>();
             int direction = GetDirection();
-            var defaultSquareChange = new SquareRelative(0, direction);
-            SquareRelative[] defaultMove = { defaultSquareChange };
+            var defaultSquareChange = new SquareChange(0, direction);
+            SquareChange[] defaultMove = { defaultSquareChange };
             movesList.Add(defaultMove);
             if (!HasMoved)
             {
-                var specialSquareChange = new SquareRelative(0, direction * SpecialChange);
-                SquareRelative[] specialMove = { defaultSquareChange, specialSquareChange };
+                var specialSquareChange = new SquareChange(0, direction * SpecialChange);
+                SquareChange[] specialMove = { defaultSquareChange, specialSquareChange };
                 movesList.Add(specialMove);
             }
             var movesArray = movesList.ToArray();
@@ -44,10 +44,10 @@ namespace Chess.Game.Pieces
         public CaptureRelative[] GetCaptures()
         {
             int direction = GetDirection();
-            var leftSquareChange = new SquareRelative(-1, direction);
-            var rightSquareChange = new SquareRelative(1, direction);
-            CaptureRelative leftCapture = new CaptureRelative(leftSquareChange, new SquareRelative[] { });
-            CaptureRelative rightCapture = new CaptureRelative(rightSquareChange, new SquareRelative[] { });
+            var leftSquareChange = new SquareChange(-1, direction);
+            var rightSquareChange = new SquareChange(1, direction);
+            CaptureRelative leftCapture = new CaptureRelative(leftSquareChange, new SquareChange[] { });
+            CaptureRelative rightCapture = new CaptureRelative(rightSquareChange, new SquareChange[] { });
             CaptureRelative[] captures = { leftCapture, rightCapture };
             return captures;
         }

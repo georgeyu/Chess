@@ -23,15 +23,15 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareRelative[][] GetMoves()
+        public SquareChange[][] GetMoves()
         {
-            SquareRelative[][] moves = MoveCreator.GetHorizontalVerticalMoves(Constants.BoardDimension - 1);
+            SquareChange[][] moves = ActionGenerator.GenerateStraightMoves(Constants.BoardDimension - 1);
             return moves;
         }
 
         public CaptureRelative[] GetCaptures()
         {
-            CaptureRelative[] captures = MoveCreator.GetHorizontalVerticalCaptures(Constants.BoardDimension - 1);
+            CaptureRelative[] captures = ActionGenerator.GenerateStraightCaptures(Constants.BoardDimension - 1);
             return captures;
         }
 

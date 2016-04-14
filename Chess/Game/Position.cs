@@ -251,7 +251,7 @@ namespace Chess.Game
             {
                 return movesAbsolute;
             }
-            SquareRelative[][] movesRelative = piece.GetMoves();
+            SquareChange[][] movesRelative = piece.GetMoves();
             var startSquare = new SquareAbsolute(file, rank);
             foreach (var moveRelative in movesRelative)
             {
@@ -487,8 +487,8 @@ namespace Chess.Game
                     x => new SquareAbsolute(file + x.FileChange, rank + x.RankChange));
                 var passingSquaresArray = passingSquaresEnumerable.ToArray();
                 var finalSquare = new SquareAbsolute(
-                    file + captureRelative.FinalSquare.FileChange,
-                    rank + captureRelative.FinalSquare.RankChange);
+                    file + captureRelative.CaptureSquare.FileChange,
+                    rank + captureRelative.CaptureSquare.RankChange);
                 var captureAbsolute = new CaptureAbsolute(startSquare, finalSquare, passingSquaresArray);
                 capturesAbsolute.Add(captureAbsolute);
             }
