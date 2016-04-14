@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
+    /// <summary>
+    /// Represents a rook.
+    /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class Rook : Piece
     {
         private const string FenWhite = "R";
         private const string FenBlack = "r";
 
-        public Rook(bool isWhite, bool hasMoved)
+        public Rook(bool isWhite, bool hasMoved = false)
         {
             IsWhite = isWhite;
             HasMoved = hasMoved;
@@ -23,15 +26,15 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GetMoves()
+        public SquareChange[][] GenerateMoves()
         {
-            SquareChange[][] moves = ActionGenerator.GenerateStraightMoves(Constants.BoardDimension - 1);
+            SquareChange[][] moves = ActionGenerator.GenerateStraightMoves(Constants.BoardLength - 1);
             return moves;
         }
 
-        public CaptureRelative[] GetCaptures()
+        public CaptureRelative[] GenerateCaptures()
         {
-            CaptureRelative[] captures = ActionGenerator.GenerateStraightCaptures(Constants.BoardDimension - 1);
+            CaptureRelative[] captures = ActionGenerator.GenerateStraightCaptures(Constants.BoardLength - 1);
             return captures;
         }
 

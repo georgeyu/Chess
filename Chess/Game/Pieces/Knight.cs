@@ -7,16 +7,19 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
+    /// <summary>
+    /// Represents a knight.
+    /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class Knight : Piece
     {
-        private const int Short = 1;
-        private const int Long = 2;
+        private const int LongChange = 2;
+        private const int ShortChange = 1;
         private const string FenWhite = "N";
         private const string FenBlack = "n";
         private int[] signs = { -1, 1 };
 
-        public Knight(bool isWhite, bool hasMoved)
+        public Knight(bool isWhite, bool hasMoved = false)
         {
             IsWhite = isWhite;
             HasMoved = hasMoved;
@@ -26,20 +29,20 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GetMoves()
+        public SquareChange[][] GenerateMoves()
         {
-            List<SquareChange> finalSquares = GetFinalSquares();
-            IEnumerable<SquareChange[]> movesEnumerable = finalSquares.Select(x => new SquareChange[] { x });
-            SquareChange[][] movesArray = movesEnumerable.ToArray();
-            return movesArray;
+            var squares = GenerateSquares();
+            var moveEnumerable = squares.Select(x => new SquareChange[] { x });
+            var moveArray = moveEnumerable.ToArray();
+            return moveArray;
         }
 
-        public CaptureRelative[] GetCaptures()
+        public CaptureRelative[] GenerateCaptures()
         {
-            List<SquareChange> finalSquares = GetFinalSquares();
-            IEnumerable<CaptureRelative> capturesEnumerable = finalSquares.Select(x => new CaptureRelative(x, new SquareChange[] { }));
-            CaptureRelative[] capturesArray = capturesEnumerable.ToArray();
-            return capturesArray;
+            var squares = GenerateSquares();
+            var captureEnumerable = squares.Select(x => new CaptureRelative(x, new SquareChange[] { }));
+            var captureArray = captureEnumerable.ToArray();
+            return captureArray;
         }
 
         public string GetFen()
@@ -47,40 +50,22 @@ namespace Chess.Game.Pieces
             return IsWhite ? FenWhite : FenBlack;
         }
 
-        private List<SquareChange> GetFinalSquares()
+        /// <summary>
+        /// Generate the squares the knight lands on.
+        /// </summary>
+        /// <returns>The squares the knight lands on.</returns>
+        private SquareChange[] GenerateSquares()
         {
-            var finalSquares = new List<SquareChange>();
-            var fileShort = new Tuple<int, int>(Short, Long);
-            var rankShort = new Tuple<int, int>(Long, Short);
-            Tuple<int, int>[] moveBaseCases = { fileShort, rankShort };
-            foreach (var moveBaseCase in moveBaseCases)
-            {
-                List<SquareChange> fileSignFlipped = FlipFileSign(moveBaseCase);
-                finalSquares.AddRange(fileSignFlipped);
-            }
-            return finalSquares;
-        }
-
-        private List<SquareChange> FlipFileSign(Tuple<int, int> moveBaseCase)
-        {
-            var moves = new List<SquareChange>();
-            foreach (var sign in signs)
-            {
-                List<SquareChange> rankSignFlipped = FlipRankSign(moveBaseCase, sign);
-                moves.AddRange(rankSignFlipped);
-            }
-            return moves;
-        }
-
-        private List<SquareChange> FlipRankSign(Tuple<int, int> moveBaseCase, int fileSign)
-        {
-            var moves = new List<SquareChange>();
-            foreach (var sign in signs)
-            {
-                SquareChange move = new SquareChange(fileSign * moveBaseCase.Item1, sign * moveBaseCase.Item2);
-                moves.Add(move);
-            }
-            return moves;
+            var square0 = new SquareChange(LongChange, ShortChange);
+            var square1 = new SquareChange(-LongChange, ShortChange);
+            var square2 = new SquareChange(LongChange, -ShortChange);
+            var square3 = new SquareChange(-LongChange, -ShortChange);
+            var square4 = new SquareChange(ShortChange, LongChange);
+            var square5 = new SquareChange(-ShortChange, LongChange);
+            var square6 = new SquareChange(ShortChange, -LongChange);
+            var square7 = new SquareChange(-ShortChange, -LongChange);
+            SquareChange[] squares = { square0, square1, square2, square3, square4, square5, square6, square7 };
+            return squares;
         }
     }
 }

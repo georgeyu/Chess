@@ -7,47 +7,41 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
+    /// <summary>
+    /// Represents a king.
+    /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class King : Piece
     {
-        private const int KingRange = 1;
+        private const int Range = 1;
         private const string FenWhite = "K";
         private const string FenBlack = "k";
 
-        public King(bool isWhite, bool hasMoved)
+        public King(bool isWhite, bool hasMoved = false)
         {
             IsWhite = isWhite;
             HasMoved = hasMoved;
         }
-
+        
         public bool IsWhite { get; private set; }
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GetMoves()
+        public SquareChange[][] GenerateMoves()
         {
-            SquareChange[][] moves = GetActions(ActionGenerator.GenerateStraightMoves, ActionGenerator.GenerateDiagonalMoves);
+            var moves = ActionGenerator.GenerateAllMoves(Range);
             return moves;
         }
 
-        public CaptureRelative[] GetCaptures()
+        public CaptureRelative[] GenerateCaptures()
         {
-            CaptureRelative[] captures = GetActions(ActionGenerator.GenerateStraightCaptures, ActionGenerator.GenerateDiagonalCaptures);
+            var captures = ActionGenerator.GenerateAllCaptures(Range);
             return captures;
         }
 
         public string GetFen()
         {
             return IsWhite ? FenWhite : FenBlack;
-        }
-
-        private T[] GetActions<T>(Func<int, T[]> getHorizontalVerticalActions, Func<int, T[]> getDiagonalActions)
-        {
-            T[] horizontalVerticalActions = getHorizontalVerticalActions(KingRange);
-            T[] diagonalActions = getDiagonalActions(KingRange);
-            IEnumerable<T> actionsEnumerable = horizontalVerticalActions.Concat(diagonalActions);
-            var actionsArray = actionsEnumerable.ToArray();
-            return actionsArray;
         }
     }
 }

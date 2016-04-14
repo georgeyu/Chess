@@ -34,6 +34,22 @@ namespace Chess.Game.Pieces
         }
 
         /// <summary>
+        /// Generates moves along the file, rank and diagonals.
+        /// </summary>
+        /// <param name="length">The max displacement.</param>
+        /// <returns>Moves along the file, rank and diagonals.</returns>
+        public static SquareChange[][] GenerateAllMoves(int length)
+        {
+            var moveList = new List<SquareChange[]>();
+            var straightMoves = GenerateStraightMoves(length);
+            var diagonalMoves = GenerateDiagonalMoves(length);
+            moveList.AddRange(straightMoves);
+            moveList.AddRange(diagonalMoves);
+            var moveArray = moveList.ToArray();
+            return moveArray;
+        }
+
+        /// <summary>
         /// Generates captures along the file and rank.
         /// </summary>
         /// <param name="length">The max displacement.</param>
@@ -53,6 +69,22 @@ namespace Chess.Game.Pieces
         {
             var captures = GenerateActions(length, GenerateDiagonalDirections, GenerateCaptures);
             return captures;
+        }
+
+        /// <summary>
+        /// Generates captures along the file, rank and diagonals.
+        /// </summary>
+        /// <param name="length">The max displacement.</param>
+        /// <returns>Captures along the file, rank and diagonals.</returns>
+        public static CaptureRelative[] GenerateAllCaptures(int length)
+        {
+            var captureList = new List<CaptureRelative>();
+            var straightCaptures = GenerateStraightCaptures(length);
+            var diagonalCaptures = GenerateDiagonalCaptures(length);
+            captureList.AddRange(straightCaptures);
+            captureList.AddRange(diagonalCaptures);
+            var captureArray = captureList.ToArray();
+            return captureArray;
         }
 
         /// <summary>

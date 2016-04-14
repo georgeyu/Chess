@@ -8,12 +8,26 @@ namespace Chess.Game.Pieces
 {
     internal interface Piece : Square
     {
+        /// <summary>
+        /// The color.
+        /// </summary>
         bool IsWhite { get; }
 
+        /// <summary>
+        /// Whether it has moved.
+        /// </summary>
         bool HasMoved { get; set; }
 
-        SquareChange[][] GetMoves();
+        /// <summary>
+        /// Generate the moves.
+        /// </summary>
+        /// <returns>The moves.</returns>
+        SquareChange[][] GenerateMoves();
 
-        CaptureRelative[] GetCaptures();
+        /// <summary>
+        /// Generate the captures.
+        /// </summary>
+        /// <returns>The captures.</returns>
+        CaptureRelative[] GenerateCaptures();
     }
 }

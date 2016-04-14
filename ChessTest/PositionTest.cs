@@ -11,8 +11,8 @@ namespace ChessTest
     [TestClass]
     public class PositionTest
     {
-        private const int EmptySquareCount = Constants.BoardDimension * 4;
-        private const int PawnCount = Constants.BoardDimension * 2;
+        private const int EmptySquareCount = Constants.BoardLength * 4;
+        private const int PawnCount = Constants.BoardLength * 2;
         private const int DoublePieceCount = 2 * 2;
         private const int SinglePieceCount = 2;
         private const int StartBoardMoveCount = 20;
@@ -34,7 +34,7 @@ namespace ChessTest
         public void Position_Empty_BoardSize()
         {
             Position position = new Position();
-            Assert.IsTrue(position.Board.Length == Constants.BoardDimension * Constants.BoardDimension);
+            Assert.IsTrue(position.Board.Length == Constants.BoardLength * Constants.BoardLength);
         }
 
         [TestMethod]
@@ -177,7 +177,7 @@ namespace ChessTest
 
         private void LoopSquaresByFile(int file)
         {
-            for (int i = 0; i < Constants.BoardDimension; i++)
+            for (int i = 0; i < Constants.BoardLength; i++)
             {
                 string id = files[file] + (i + 1).ToString();
                 squareByString[id] = new SquareAbsolute(file, i);

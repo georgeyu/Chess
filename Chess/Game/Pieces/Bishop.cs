@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
+    /// <summary>
+    /// Represents a bishop.
+    /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class Bishop : Piece
     {
         private const string FenWhite = "B";
         private const string FenBlack = "b";
 
-        public Bishop(bool isWhite, bool hasMoved)
+        public Bishop(bool isWhite, bool hasMoved = false)
         {
             IsWhite = isWhite;
             HasMoved = hasMoved;
@@ -23,15 +26,15 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GetMoves()
+        public SquareChange[][] GenerateMoves()
         {
-            SquareChange[][] moves = ActionGenerator.GenerateDiagonalMoves(Constants.BoardDimension - 1);
+            SquareChange[][] moves = ActionGenerator.GenerateDiagonalMoves(Constants.BoardLength - 1);
             return moves;
         }
 
-        public CaptureRelative[] GetCaptures()
+        public CaptureRelative[] GenerateCaptures()
         {
-            CaptureRelative[] captures = ActionGenerator.GenerateDiagonalCaptures(Constants.BoardDimension - 1);
+            CaptureRelative[] captures = ActionGenerator.GenerateDiagonalCaptures(Constants.BoardLength - 1);
             return captures;
         }
 

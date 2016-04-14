@@ -7,43 +7,46 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
+    /// <summary>
+    /// Represents a pawn.
+    /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class Pawn : Piece
     {
-        private const int SpecialChange = 2;
+        private const int unmovedDisplacement = 2;
         private const string FenWhite = "P";
         private const string FenBlack = "p";
+        private readonly int direction;
 
-        public Pawn(bool isWhite, bool hasMoved)
+        public Pawn(bool isWhite, bool hasMoved = false)
         {
             IsWhite = isWhite;
             HasMoved = hasMoved;
+            direction = isWhite ? 1 : -1;
         }
 
         public bool IsWhite { get; private set; }
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GetMoves()
+        public SquareChange[][] GenerateMoves()
         {
-            var movesList = new List<SquareChange[]>();
-            int direction = GetDirection();
+            var moveList = new List<SquareChange[]>();
             var defaultSquareChange = new SquareChange(0, direction);
             SquareChange[] defaultMove = { defaultSquareChange };
-            movesList.Add(defaultMove);
+            moveList.Add(defaultMove);
             if (!HasMoved)
             {
-                var specialSquareChange = new SquareChange(0, direction * SpecialChange);
-                SquareChange[] specialMove = { defaultSquareChange, specialSquareChange };
-                movesList.Add(specialMove);
+                var unmovedSquareChange = new SquareChange(0, direction * unmovedDisplacement);
+                SquareChange[] unmovedMove = { defaultSquareChange, unmovedSquareChange };
+                moveList.Add(unmovedMove);
             }
-            var movesArray = movesList.ToArray();
-            return movesArray;
+            var moveArray = moveList.ToArray();
+            return moveArray;
         }
 
-        public CaptureRelative[] GetCaptures()
+        public CaptureRelative[] GenerateCaptures()
         {
-            int direction = GetDirection();
             var leftSquareChange = new SquareChange(-1, direction);
             var rightSquareChange = new SquareChange(1, direction);
             CaptureRelative leftCapture = new CaptureRelative(leftSquareChange, new SquareChange[] { });
@@ -55,11 +58,6 @@ namespace Chess.Game.Pieces
         public string GetFen()
         {
             return IsWhite ? FenWhite : FenBlack;
-        }
-
-        private int GetDirection()
-        {
-            return IsWhite ? 1 : -1;
         }
     }
 }

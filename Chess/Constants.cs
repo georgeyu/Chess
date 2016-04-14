@@ -8,7 +8,7 @@ namespace Chess
 {
     internal static class Constants
     {
-        public const int BoardDimension = 8;
+        public const int BoardLength = 8;
         public const string EmptySquare = "E";
     }
 }

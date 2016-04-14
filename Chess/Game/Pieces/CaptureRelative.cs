@@ -17,8 +17,14 @@ namespace Chess.Game.Pieces
             PassingSquares = passingSquares;
         }
 
+        /// <summary>
+        /// The capture square.
+        /// </summary>
         public SquareChange CaptureSquare { get; private set; }
 
+        /// <summary>
+        /// The passing squares.
+        /// </summary>
         public SquareChange[] PassingSquares { get; private set; }
     }
 }

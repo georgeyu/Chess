@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
+    /// <summary>
+    /// Represents a queen.
+    /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
     internal class Queen : Piece
     {
         private const string FenWhite = "Q";
         private const string FenBlack = "q";
 
-        public Queen(bool isWhite, bool hasMoved)
+        public Queen(bool isWhite, bool hasMoved = false)
         {
             IsWhite = isWhite;
             HasMoved = hasMoved;
@@ -23,30 +26,21 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GetMoves()
+        public SquareChange[][] GenerateMoves()
         {
-            SquareChange[][] moves = GetActions(ActionGenerator.GenerateStraightMoves, ActionGenerator.GenerateDiagonalMoves);
+            var moves = ActionGenerator.GenerateAllMoves(Constants.BoardLength - 1);
             return moves;
         }
 
-        public CaptureRelative[] GetCaptures()
+        public CaptureRelative[] GenerateCaptures()
         {
-            CaptureRelative[] captures = GetActions(ActionGenerator.GenerateStraightCaptures, ActionGenerator.GenerateDiagonalCaptures);
+            var captures = ActionGenerator.GenerateAllCaptures(Constants.BoardLength - 1);
             return captures;
         }
 
         public string GetFen()
         {
             return IsWhite ? FenWhite : FenBlack;
-        }
-
-        private T[] GetActions<T>(Func<int, T[]> getHorizontalVerticalActions, Func<int, T[]> getDiagonalActions)
-        {
-            T[] horizontalVerticalActions = getHorizontalVerticalActions(Constants.BoardDimension - 1);
-            T[] diagonalActions = getDiagonalActions(Constants.BoardDimension - 1);
-            IEnumerable<T> actionsEnumerable = horizontalVerticalActions.Concat(diagonalActions);
-            var actionsArray = actionsEnumerable.ToArray();
-            return actionsArray;
         }
     }
 }

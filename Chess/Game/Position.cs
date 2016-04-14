@@ -14,9 +14,9 @@ namespace Chess.Game
     {
         private const int EmptySquareOffset = 2;
         private const int WhitePawnRank = 1;
-        private const int BlackPawnRank = Constants.BoardDimension - 2;
+        private const int BlackPawnRank = Constants.BoardLength - 2;
         private const int WhitePieceRank = 0;
-        private const int BlackPieceRank = Constants.BoardDimension - 1;
+        private const int BlackPieceRank = Constants.BoardLength - 1;
         private const int RookFileOffset = 0;
         private const int KnightFileOffset = 1;
         private const int BishopFileOffset = 2;
@@ -31,7 +31,7 @@ namespace Chess.Game
         {
             IsWhiteTurn = true;
             TurnNumber = 1;
-            Board = new Square[Constants.BoardDimension, Constants.BoardDimension];
+            Board = new Square[Constants.BoardLength, Constants.BoardLength];
             SetupStartPosition();
         }
 
@@ -132,7 +132,7 @@ namespace Chess.Game
 
         private void FillWithEmptySquares()
         {
-            for (var i = 0; i < Constants.BoardDimension; i++)
+            for (var i = 0; i < Constants.BoardLength; i++)
             {
                 FillFileWithEmptySquares(i);
             }
@@ -141,7 +141,7 @@ namespace Chess.Game
         private void FillFileWithEmptySquares(int rank)
         {
             var emptySquare = new EmptySquare();
-            for (var i = 0; i < Constants.BoardDimension; i++)
+            for (var i = 0; i < Constants.BoardLength; i++)
             {
                 Board[rank, i] = emptySquare;
             }
@@ -151,7 +151,7 @@ namespace Chess.Game
         {
             Piece whitePawn = new Pawn(true, false);
             Piece blackPawn = new Pawn(false, false);
-            for (var i = 0; i < Constants.BoardDimension; i++)
+            for (var i = 0; i < Constants.BoardLength; i++)
             {
                 Board[i, WhitePawnRank] = whitePawn;
                 Board[i, BlackPawnRank] = blackPawn;
@@ -181,7 +181,7 @@ namespace Chess.Game
         {
             int rank = piece.IsWhite ? WhitePieceRank : BlackPieceRank;
             Board[offset, rank] = piece;
-            Board[Constants.BoardDimension - 1 - offset, rank] = piece;
+            Board[Constants.BoardLength - 1 - offset, rank] = piece;
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace Chess.Game
             {
                 return movesAbsolute;
             }
-            SquareChange[][] movesRelative = piece.GetMoves();
+            SquareChange[][] movesRelative = piece.GenerateMoves();
             var startSquare = new SquareAbsolute(file, rank);
             foreach (var moveRelative in movesRelative)
             {
@@ -479,7 +479,7 @@ namespace Chess.Game
             {
                 return capturesAbsolute;
             }
-            CaptureRelative[] capturesRelative = piece.GetCaptures();
+            CaptureRelative[] capturesRelative = piece.GenerateCaptures();
             var startSquare = new SquareAbsolute(file, rank);
             foreach (var captureRelative in capturesRelative)
             {
