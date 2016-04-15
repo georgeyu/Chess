@@ -32,21 +32,20 @@ namespace Chess.Game
             IsWhiteTurn = true;
             TurnNumber = 1;
             Board = new Square[Constants.BoardLength, Constants.BoardLength];
-            SetupStartPosition();
+            SetupBoard();
         }
 
-        public Position(bool isWhiteTurn, int moveNumber)
+        public Position(Square[,] board, bool isWhiteTurn = true, int turnNumber = 1)
         {
+            Board = board;
             IsWhiteTurn = isWhiteTurn;
-            TurnNumber = moveNumber;
-            throw new NotImplementedException();
+            TurnNumber = turnNumber;
         }
 
         public bool IsWhiteTurn { get; private set; }
 
         public int TurnNumber { get; private set; }
 
-        // The 0th dimension is the file. The 1st dimension is the rank.
         public Square[,] Board { get; private set; }
 
         /// <summary>
@@ -54,11 +53,7 @@ namespace Chess.Game
         /// </summary>
         public MoveAbsolute[] GetMoves()
         {
-            List<MoveAbsolute> movesIgnoringLegality = GetMovesIgnoringLegality();
-            List<MoveAbsolute> movesStayingOnBoard = GetMovesStayingOnBoard(movesIgnoringLegality);
-            List<MoveAbsolute> movesWherePassingSquaresAreEmpty = GetMovesWherePassingSquaresAreEmpty(
-                movesStayingOnBoard);
-            var moves = movesWherePassingSquaresAreEmpty.ToArray();
+            var moves = MoveGetter.GetMoves(this);
             return moves;
         }
 
@@ -91,6 +86,20 @@ namespace Chess.Game
         }
 
         /// <summary>
+        /// Changes the position to match the capture made.
+        /// </summary>
+        /// <param name="capture">Capture to make.</param>
+        public void MakeCapture(CaptureAbsolute capture)
+        {
+            var startSquare = Board[capture.StartSquare.File, capture.StartSquare.Rank];
+            var piece = startSquare as Piece;
+            Board[capture.StartSquare.File, capture.StartSquare.Rank] = new EmptySquare();
+            piece.HasMoved = true;
+            Board[capture.CaptureSquare.File, capture.CaptureSquare.Rank] = piece;
+            IncrementTurn();
+        }
+
+        /// <summary>
         /// Get FEN for current position.
         /// </summary>
         public string GetFen()
@@ -108,171 +117,37 @@ namespace Chess.Game
             return fen;
         }
 
-        /// <summary>
-        /// Changes the position to match the capture made.
-        /// </summary>
-        /// <param name="capture">Capture to make.</param>
-        public void MakeCapture(CaptureAbsolute capture)
+        private void SetupBoard()
         {
-            var startSquare = Board[capture.StartSquare.File, capture.StartSquare.Rank];
-            var piece = startSquare as Piece;
-            Board[capture.StartSquare.File, capture.StartSquare.Rank] = new EmptySquare();
-            piece.HasMoved = true;
-            Board[capture.FinalSquare.File, capture.FinalSquare.Rank] = piece;
-            IncrementTurn();
-        }
-
-        private void SetupStartPosition()
-        {
-            FillWithEmptySquares();
-            FillWithPawns();
-            FillDoublePieces();
-            FillSinglePieces();
-        }
-
-        private void FillWithEmptySquares()
-        {
-            for (var i = 0; i < Constants.BoardLength; i++)
-            {
-                FillFileWithEmptySquares(i);
-            }
-        }
-
-        private void FillFileWithEmptySquares(int rank)
-        {
-            var emptySquare = new EmptySquare();
-            for (var i = 0; i < Constants.BoardLength; i++)
-            {
-                Board[rank, i] = emptySquare;
-            }
-        }
-
-        private void FillWithPawns()
-        {
-            Piece whitePawn = new Pawn(true, false);
-            Piece blackPawn = new Pawn(false, false);
-            for (var i = 0; i < Constants.BoardLength; i++)
-            {
-                Board[i, WhitePawnRank] = whitePawn;
-                Board[i, BlackPawnRank] = blackPawn;
-            }
-        }
-
-        /// <summary>
-        /// Fill with pieces that have a copy with the same color (knight, bishop and rook).
-        /// </summary>
-        private void FillDoublePieces()
-        {
-            Piece whiteKnight = new Knight(true, false);
-            Piece whiteBishop = new Bishop(true, false);
-            Piece whiteRook = new Rook(true, false);
-            Piece blackKnight = new Knight(false, false);
-            Piece blackBishop = new Bishop(false, false);
-            Piece blackRook = new Rook(false, false);
-            FillPieceTwice(whiteKnight, KnightFileOffset);
-            FillPieceTwice(whiteBishop, BishopFileOffset);
-            FillPieceTwice(whiteRook, RookFileOffset);
-            FillPieceTwice(blackKnight, KnightFileOffset);
-            FillPieceTwice(blackBishop, BishopFileOffset);
-            FillPieceTwice(blackRook, RookFileOffset);
-        }
-
-        private void FillPieceTwice(Piece piece, int offset)
-        {
-            int rank = piece.IsWhite ? WhitePieceRank : BlackPieceRank;
-            Board[offset, rank] = piece;
-            Board[Constants.BoardLength - 1 - offset, rank] = piece;
-        }
-
-        /// <summary>
-        /// Fill with pieces that do not have a copy (king and queen).
-        /// </summary>
-        private void FillSinglePieces()
-        {
-            Piece whiteQueen = new Queen(true, false);
-            Piece whiteKing = new King(true, false);
-            Piece blackQueen = new Queen(false, false);
-            Piece blackKing = new King(false, false);
-            Board[QueenFile, WhitePieceRank] = whiteQueen;
-            Board[KingFile, WhitePieceRank] = whiteKing;
-            Board[QueenFile, BlackPieceRank] = blackQueen;
-            Board[KingFile, BlackPieceRank] = blackKing;
-        }
-
-        /// <summary>
-        /// Gets all moves for the pieces on the board of the current color.
-        /// </summary>
-        private List<MoveAbsolute> GetMovesIgnoringLegality()
-        {
-            var moves = new List<MoveAbsolute>();
             int files = Board.GetLength(FileIndex);
-            for (int i = 0; i < files; i++)
+            for (var i = 0; i < Constants.BoardLength; i++)
             {
-                List<MoveAbsolute> movesOnFile = GetMovesOnFile(i);
-                moves.AddRange(movesOnFile);
+                for (var j = 0; j < Constants.BoardLength; j++)
+                {
+                    Board[i, j] = new EmptySquare();
+                }
             }
-            return moves;
-        }
-
-        /// <summary>
-        /// Gets all moves for the pieces on the file of the current color.
-        /// </summary>
-        /// <param name="file"></param>
-        private List<MoveAbsolute> GetMovesOnFile(int file)
-        {
-            int ranks = Board.GetLength(RankIndex);
-            var moves = new List<MoveAbsolute>();
-            for (int i = 0; i < ranks; i++)
+            for (var i = 0; i < Constants.BoardLength; i++)
             {
-                List<MoveAbsolute> movesFromSquare = GetMovesFromSquare(Board[file, i], file, i);
-                moves.AddRange(movesFromSquare);
+                Board[i, WhitePawnRank] = new Pawn(true);
+                Board[i, BlackPawnRank] = new Pawn(false);
             }
-            return moves;
-        }
-
-        /// <summary>
-        /// If a square has a piece, then get the moves for the current turn.
-        /// </summary>
-        /// <param name="square">Square to check for piece and current turn color.</param>
-        private List<MoveAbsolute> GetMovesFromSquare(Square square, int file, int rank)
-        {
-            var movesAbsolute = new List<MoveAbsolute>();
-            bool isEmpty = square is EmptySquare;
-            if (isEmpty)
-            {
-                return movesAbsolute;
-            }
-            Piece piece = square as Piece;
-            if (piece == null)
-            {
-                log.Error("Square not recognized");
-            }
-            if (piece.IsWhite != IsWhiteTurn)
-            {
-                return movesAbsolute;
-            }
-            SquareChange[][] movesRelative = piece.GenerateMoves();
-            var startSquare = new SquareAbsolute(file, rank);
-            foreach (var moveRelative in movesRelative)
-            {
-                var squaresAbsoluteEnumerable = moveRelative.Select(
-                    x => new SquareAbsolute(file + x.FileChange, rank + x.RankChange));
-                var squaresAbsoluteArray = squaresAbsoluteEnumerable.ToArray();
-                var moveAbsolute = new MoveAbsolute(startSquare, squaresAbsoluteArray);
-                movesAbsolute.Add(moveAbsolute);
-            }
-            return movesAbsolute;
-        }
-
-        private List<MoveAbsolute> GetMovesWherePassingSquaresAreEmpty(List<MoveAbsolute> moves)
-        {
-            var movesWherePassingSquaresAreEmpty = new List<MoveAbsolute>();
-            foreach (MoveAbsolute move in moves)
-            {
-                List<MoveAbsolute> moveWherePassingSquaresAreEmpty = GetMoveWherePassingSquaresAreEmpty(move);
-                movesWherePassingSquaresAreEmpty.AddRange(moveWherePassingSquaresAreEmpty);
-            }
-            return movesWherePassingSquaresAreEmpty;
+            Board[RookFileOffset, WhitePieceRank] = new Rook(true);
+            Board[KnightFileOffset, WhitePieceRank] = new Knight(true);
+            Board[BishopFileOffset, WhitePieceRank] = new Bishop(true);
+            Board[QueenFile, WhitePieceRank] = new Queen(true);
+            Board[KingFile, WhitePieceRank] = new King(true);
+            Board[Constants.BoardLength - BishopFileOffset - 1, WhitePieceRank] = new Bishop(true);
+            Board[Constants.BoardLength - KnightFileOffset - 1, WhitePieceRank] = new Knight(true);
+            Board[Constants.BoardLength - RookFileOffset - 1, WhitePieceRank] = new Rook(true);
+            Board[RookFileOffset, BlackPieceRank] = new Rook(false);
+            Board[KnightFileOffset, BlackPieceRank] = new Knight(false);
+            Board[BishopFileOffset, BlackPieceRank] = new Bishop(false);
+            Board[QueenFile, BlackPieceRank] = new Queen(false);
+            Board[KingFile, BlackPieceRank] = new King(false);
+            Board[Constants.BoardLength - BishopFileOffset - 1, BlackPieceRank] = new Bishop(false);
+            Board[Constants.BoardLength - KnightFileOffset - 1, BlackPieceRank] = new Knight(false);
+            Board[Constants.BoardLength - RookFileOffset - 1, BlackPieceRank] = new Rook(false);
         }
 
         private List<CaptureAbsolute> GetCapturesWherePassingSquaresAreEmpty(List<CaptureAbsolute> captures)
@@ -284,18 +159,6 @@ namespace Chess.Game
                 capturesWherePassingSquaresAreEmpty.AddRange(captureWherePassingSquaresAreEmpty);
             }
             return capturesWherePassingSquaresAreEmpty;
-        }
-
-        private List<MoveAbsolute> GetMoveWherePassingSquaresAreEmpty(MoveAbsolute move)
-        {
-            var moves = new List<MoveAbsolute>();
-            var arePassingSquaresEmpty = move.PassingSquares.Select(x => Board[x.File, x.Rank] is EmptySquare);
-            var areAllPassingSquaresEmpty = arePassingSquaresEmpty.Aggregate((x, y) => x && y);
-            if (areAllPassingSquaresEmpty)
-            {
-                moves.Add(move);
-            }
-            return moves;
         }
 
         private List<CaptureAbsolute> GetCaptureWherePassingSquaresAreEmpty(CaptureAbsolute capture)
@@ -314,17 +177,6 @@ namespace Chess.Game
             return captures;
         }
 
-        private List<MoveAbsolute> GetMovesStayingOnBoard(List<MoveAbsolute> moves)
-        {
-            var movesStayingOnBoard = new List<MoveAbsolute>();
-            foreach (MoveAbsolute move in moves)
-            {
-                List<MoveAbsolute> moveStayingOnBoard = GetMoveStayingOnBoard(move);
-                movesStayingOnBoard.AddRange(moveStayingOnBoard);
-            }
-            return movesStayingOnBoard;
-        }
-
         private List<CaptureAbsolute> GetCapturesStayingOnBoard(List<CaptureAbsolute> captures)
         {
             var capturesStayingOnBoard = new List<CaptureAbsolute>();
@@ -334,24 +186,6 @@ namespace Chess.Game
                 capturesStayingOnBoard.AddRange(captureStayingOnBoard);
             }
             return capturesStayingOnBoard;
-        }
-
-        private List<MoveAbsolute> GetMoveStayingOnBoard(MoveAbsolute move)
-        {
-            var moveStayingOnBoard = new List<MoveAbsolute>();
-            int files = Board.GetLength(FileIndex);
-            int ranks = Board.GetLength(RankIndex);
-            var doPassingSquaresStayOnBoard = move.PassingSquares.Select(x => (
-                (x.File < files) &&
-                (x.Rank < ranks) &&
-                (x.File >= 0) &&
-                (x.Rank >= 0)));
-            bool doAllPassingSquaresStayOnBoard = doPassingSquaresStayOnBoard.Aggregate((x, y) => x && y);
-            if (doAllPassingSquaresStayOnBoard)
-            {
-                moveStayingOnBoard.Add(move);
-            }
-            return moveStayingOnBoard;
         }
 
         private List<CaptureAbsolute> GetCaptureStayingOnBoard(CaptureAbsolute capture)
@@ -372,10 +206,10 @@ namespace Chess.Game
                     return captureStayingOnBoard;
                 }
             }
-            bool doesFinalSquareStayOnBoard = (capture.FinalSquare.File < files) &&
-                (capture.FinalSquare.File >= 0) &&
-                (capture.FinalSquare.Rank < ranks) &&
-                (capture.FinalSquare.Rank >= 0);
+            bool doesFinalSquareStayOnBoard = (capture.CaptureSquare.File < files) &&
+                (capture.CaptureSquare.File >= 0) &&
+                (capture.CaptureSquare.Rank < ranks) &&
+                (capture.CaptureSquare.Rank >= 0);
             if (doesFinalSquareStayOnBoard)
             {
                 captureStayingOnBoard.Add(capture);
@@ -500,7 +334,7 @@ namespace Chess.Game
             var capturesWhereFinalSquareIsEnemyPiece = new List<CaptureAbsolute>();
             foreach (CaptureAbsolute capture in captures)
             {
-                var finalSquare = Board[capture.FinalSquare.File, capture.FinalSquare.Rank];
+                var finalSquare = Board[capture.CaptureSquare.File, capture.CaptureSquare.Rank];
                 var isEmptySquare = finalSquare is EmptySquare;
                 if (isEmptySquare)
                 {

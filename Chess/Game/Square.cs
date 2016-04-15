@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chess.Game
 {
+    /// <summary>
+    /// Represents a square.
+    /// </summary>
     internal interface Square
     {
         string GetFen();

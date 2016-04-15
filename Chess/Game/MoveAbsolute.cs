@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chess.Game
 {
+    /// <summary>
+    /// Represents a move using absolute squares.
+    /// </summary>
     internal class MoveAbsolute
     {
         public MoveAbsolute(SquareAbsolute startSquare, SquareAbsolute[] passingSquares)

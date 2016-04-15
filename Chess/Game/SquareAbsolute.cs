@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chess.Game
 {
+    /// <summary>
+    /// Represents an absolute square.
+    /// </summary>
     internal class SquareAbsolute
     {
         public SquareAbsolute(int file, int rank)

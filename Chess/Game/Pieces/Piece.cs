@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
+    /// <summary>
+    /// Represents a piece.
+    /// </summary>
     internal interface Piece : Square
     {
         /// <summary>
