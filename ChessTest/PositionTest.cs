@@ -83,7 +83,7 @@ namespace ChessTest
         public void GetMoves_StartBoard_Count()
         {
             var position = new Position();
-            MoveAbsolute[] moves = position.GetMoves();
+            MoveAbsolute[] moves = MoveGetter.GetMoves(position);
             Assert.IsTrue(moves.Length == StartBoardMoveCount);
         }
 
@@ -91,7 +91,7 @@ namespace ChessTest
         public void PositionGetFen_StartBoard_GetFen()
         {
             Position position = new Position();
-            string fen = position.GetFen();
+            string fen = FenGetter.GetFen(position);
             Assert.IsTrue(fen == StartBoardFen);
         }
 
@@ -120,7 +120,7 @@ namespace ChessTest
                     squareByString["b5"]
                 });
             position.MakeMove(white3);
-            string fen = position.GetFen();
+            string fen = FenGetter.GetFen(position);
             Assert.IsTrue(fen == RuyLopezFen);
         }
 
@@ -160,7 +160,7 @@ namespace ChessTest
             position.MakeMove(white5);
             MoveAbsolute black5 = new MoveAbsolute(squareByString["a7"], new SquareAbsolute[] { squareByString["a6"] });
             position.MakeMove(black5);
-            string fen = position.GetFen();
+            string fen = FenGetter.GetFen(position);
             Assert.AreEqual(fen, NajdorfFen);
         }
 
@@ -177,7 +177,7 @@ namespace ChessTest
 
         private void LoopSquaresByFile(int file)
         {
-            for (int i = 0; i < Constants.BoardLength; i++)
+            for (var i = 0; i < Constants.BoardLength; i++)
             {
                 string id = files[file] + (i + 1).ToString();
                 squareByString[id] = new SquareAbsolute(file, i);
