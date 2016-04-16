@@ -1,4 +1,5 @@
-﻿using Chess.Game.Pieces;
+﻿using Chess.Game.Actions;
+using Chess.Game.Pieces;
 using log4net;
 using System;
 using System.Collections.Generic;

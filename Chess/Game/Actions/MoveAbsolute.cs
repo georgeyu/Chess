@@ -4,23 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Game
+namespace Chess.Game.Actions
 {
     /// <summary>
-    /// Represents a capture using absolute squares.
+    /// Represents a move using absolute squares.
     /// </summary>
-    internal class CaptureAbsolute
+    internal class MoveAbsolute
     {
-        public CaptureAbsolute(SquareAbsolute startSquare, SquareAbsolute captureSquare, SquareAbsolute[] passingSquares)
+        public MoveAbsolute(SquareAbsolute startSquare, SquareAbsolute[] passingSquares)
         {
             StartSquare = startSquare;
-            CaptureSquare = captureSquare;
             PassingSquares = passingSquares;
         }
 
         public SquareAbsolute StartSquare { get; private set; }
-
-        public SquareAbsolute CaptureSquare { get; private set; }
 
         public SquareAbsolute[] PassingSquares { get; private set; }
     }

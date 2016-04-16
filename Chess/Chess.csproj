@@ -83,19 +83,19 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Constants.cs" />
-    <Compile Include="Game\ActionGetterUtil.cs" />
-    <Compile Include="Game\CaptureGetter.cs" />
+    <Compile Include="Game\Actions\ActionGetterUtil.cs" />
+    <Compile Include="Game\Actions\CaptureGetter.cs" />
     <Compile Include="Game\FenGetter.cs" />
-    <Compile Include="Game\MoveGetter.cs" />
+    <Compile Include="Game\Actions\MoveGetter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\CaptureAbsolute.cs" />
+    <Compile Include="Game\Actions\CaptureAbsolute.cs" />
     <Compile Include="Game\EmptySquare.cs" />
-    <Compile Include="Game\MoveAbsolute.cs" />
+    <Compile Include="Game\Actions\MoveAbsolute.cs" />
     <Compile Include="Game\Pieces\Bishop.cs" />
     <Compile Include="Game\Pieces\CaptureRelative.cs" />
     <Compile Include="Game\Pieces\King.cs" />

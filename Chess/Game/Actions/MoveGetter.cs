@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Game
+namespace Chess.Game.Actions
 {
     /// <summary>
     /// Utility that gets legal moves from a position.

@@ -5,6 +5,7 @@ using Chess;
 using Chess.Game.Pieces;
 using System.Collections;
 using System.Collections.Generic;
+using Chess.Game.Actions;
 
 namespace ChessTest
 {
@@ -24,7 +25,7 @@ namespace ChessTest
 
         public PositionTest()
         {
-            for (int i = 0; i < files.Length; i++)
+            for (var i = 0; i < files.Length; i++)
             {
                 LoopSquaresByFile(i);
             }
@@ -167,7 +168,7 @@ namespace ChessTest
         private void CountSquares(int expectedCount, Func<Square, bool> checkSquareType)
         {
             Position position = new Position();
-            int count = 0;
+            var count = 0;
             foreach (Square square in position.Board)
             {
                 count = checkSquareType(square) ? count + 1 : count;
