@@ -9,8 +9,6 @@ namespace Chess.Game
 {
     internal static class FenGetter
     {
-        private const string FenRankSeparator = "/";
-
         /// <summary>
         /// Gets the FEN for a position.
         /// </summary>
@@ -30,10 +28,10 @@ namespace Chess.Game
                 }
                 if (i != 0)
                 {
-                    squareFens += FenRankSeparator;
+                    squareFens += Constants.FenRankSeparator;
                 }
             }
-            var boardFen = String.Join(FenRankSeparator, squareFens);
+            var boardFen = String.Join(Constants.FenRankSeparator, squareFens);
             string fen = ReplaceConsecutiveEmptySquaresWithIntegers(boardFen);
             return fen;
         }

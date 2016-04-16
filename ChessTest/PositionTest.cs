@@ -1,11 +1,16 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Chess;
 using Chess.Game;
-using Chess;
+using Chess.Game.Actions;
 using Chess.Game.Pieces;
+using log4net;
+using log4net.Config;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Chess.Game.Actions;
+using System.IO;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ChessTest
 {
@@ -17,16 +22,21 @@ namespace ChessTest
         private const int DoublePieceCount = 2 * 2;
         private const int SinglePieceCount = 2;
         private const int StartBoardMoveCount = 20;
+        private const int RandomMoves = 20;
+        private const int MaxCharInLine = 80;
         private const string StartBoardFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
         private const string RuyLopezFen = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R";
         private const string files = "abcdefgh";
         private const string NajdorfFen = "rnbqkb1r/1p2pppp/p2p1n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R";
+        private const string MakeActionRandomLogFile = "MakeAction_Random_Log.txt";
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Dictionary<string, SquareAbsolute> squareByString;
 
         public PositionTest()
         {
             var squareByString = SquareStringGenerator.GenerateSquaresByString();
             this.squareByString = squareByString;
+            XmlConfigurator.Configure();
         }
 
         [TestMethod]
@@ -104,6 +114,63 @@ namespace ChessTest
             position.MakeMove(black5);
             string fen = FenGetter.GetFen(position);
             Assert.AreEqual(fen, NajdorfFen);
+        }
+
+        [TestMethod]
+        public void MakeAction_Random_Log()
+        {
+            var position = new Position();
+            var text = new List<string>();
+            for (var i = 0; i < RandomMoves; i++)
+            {
+                string header = GetHeader(i + 1);
+                text.Add(header);
+                string board = GetBoardStringFromPosition(position);
+                text.Add(board + Environment.NewLine);
+                position = TakeRandomAction(position);
+            }
+            File.WriteAllLines(MakeActionRandomLogFile, text);
+        }
+
+        private string GetBoardStringFromPosition(Position position)
+        {
+            string fen = FenGetter.GetFen(position);
+            string rankSeparated = fen.Replace(Constants.FenRankSeparator, Environment.NewLine);
+            var regex = new Regex(@"[0-9]");
+            string integersReplacedWithSpaces = regex.Replace(
+                rankSeparated,
+                delegate (Match match)
+                {
+                    var count = Int32.Parse(match.Value);
+                    var spaces = new string(' ', count);
+                    return spaces;
+                });
+            return integersReplacedWithSpaces;
+        }
+
+        private string GetHeader(int move)
+        {
+            var moveString = move.ToString();
+            var filler = new string('-', MaxCharInLine - moveString.Length);
+            var header = String.Format("{0}{1}", moveString, filler);
+            return header;
+        }
+
+        private Position TakeRandomAction(Position position)
+        {
+            var moves = MoveGetter.GetMoves(position);
+            var captures = CaptureGetter.GetCaptures(position);
+            var random = new Random();
+            int index = random.Next(0, moves.Length + captures.Length - 1);
+            if (index < moves.Length)
+            {
+                position.MakeMove(moves[index]);
+            }
+            else
+            {
+                position.MakeCapture(captures[index - moves.Length]);
+            }
+            return position;
         }
     }
 }
