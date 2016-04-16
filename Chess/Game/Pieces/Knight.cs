@@ -50,10 +50,6 @@ namespace Chess.Game.Pieces
             return IsWhite ? FenWhite : FenBlack;
         }
 
-        /// <summary>
-        /// Generate the squares the knight lands on.
-        /// </summary>
-        /// <returns>The squares the knight lands on.</returns>
         private SquareChange[] GenerateSquares()
         {
             var square0 = new SquareChange(LongChange, ShortChange);

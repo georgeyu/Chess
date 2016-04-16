@@ -11,6 +11,11 @@ namespace Chess.Game
     {
         private const string FenRankSeparator = "/";
 
+        /// <summary>
+        /// Gets the FEN for a position.
+        /// </summary>
+        /// <param name="position">The position to get the FEN from.</param>
+        /// <returns>FEN.</returns>
         public static string GetFen(Position position)
         {
             int files = position.Board.GetLength(Constants.FileIndex);

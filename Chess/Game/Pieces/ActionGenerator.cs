@@ -87,14 +87,6 @@ namespace Chess.Game.Pieces
             return captureArray;
         }
 
-        /// <summary>
-        /// Generate moves or captures.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="length">The max displacement.</param>
-        /// <param name="directionGenerator">The directions to use.</param>
-        /// <param name="actionGenerator">The type of action: move or capture.</param>
-        /// <returns>Actions.</returns>
         private static T[] GenerateActions<T>(
             int length,
             Func<List<SquareChange>> directionGenerator,
@@ -107,10 +99,6 @@ namespace Chess.Game.Pieces
             return actionArray;
         }
 
-        /// <summary>
-        /// Generate directions along the file and rank.
-        /// </summary>
-        /// <returns>Directions along the file and rank.</returns>
         private static List<SquareChange> GenerateStraightDirections()
         {
             var directions = new List<SquareChange>();
@@ -125,10 +113,6 @@ namespace Chess.Game.Pieces
             return directions;
         }
 
-        /// <summary>
-        /// Generate directions along the diagonals.
-        /// </summary>
-        /// <returns>Directions along the diagonals.</returns>
         private static List<SquareChange> GenerateDiagonalDirections()
         {
             var directions = new List<SquareChange>();
@@ -143,12 +127,6 @@ namespace Chess.Game.Pieces
             return directions;
         }
 
-        /// <summary>
-        /// Generate moves along the direction.
-        /// </summary>
-        /// <param name="length">The max displacement.</param>
-        /// <param name="direction">The unit direction.</param>
-        /// <returns>Moves along the direction.</returns>
         private static List<SquareChange[]> GenerateMoves(int length, SquareChange direction)
         {
             var moves = new List<SquareChange[]>();
@@ -163,12 +141,6 @@ namespace Chess.Game.Pieces
             return moves;
         }
 
-        /// <summary>
-        /// Generates captures along the direction.
-        /// </summary>
-        /// <param name="length">The max displacement.</param>
-        /// <param name="direction">The unit direction.</param>
-        /// <returns>Captures along the direction.</returns>
         private static List<CaptureRelative> GenerateCaptures(int length, SquareChange direction)
         {
             var captures = new List<CaptureRelative>();

@@ -19,14 +19,8 @@ namespace Chess.Game.Pieces
             RankChange = rankChange;
         }
 
-        /// <summary>
-        /// The change in file.
-        /// </summary>
         public int FileChange { get; private set; }
-
-        /// <summary>
-        /// The change in rank.
-        /// </summary>
+        
         public int RankChange { get; private set; }
 
         public override bool Equals(object obj)

@@ -7,7 +7,7 @@ using Chess;
 namespace ChessTest
 {
     [TestClass]
-    public class PieceTest
+    public class PiecesTest
     {
         private const int KingCount = 8;
         private const int QueenCount = 56;

@@ -7,8 +7,21 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Actions
 {
+    /// <summary>
+    /// Common logic used to get all legal actions.
+    /// </summary>
     internal class ActionGetterUtil
     {
+        /// <summary>
+        /// Gets all legal and illegal actions on the board.
+        /// </summary>
+        /// <typeparam name="T">The relative action.</typeparam>
+        /// <param name="board">The board to get actions from.</param>
+        /// <param name="isWhiteTurn">Whose turn it is.</param>
+        /// <param name="files">The number of files.</param>
+        /// <param name="ranks">The number of ranks.</param>
+        /// <param name="getActionsFromSquare">Function for all actions a single square can take.</param>
+        /// <returns>Relative actions.</returns>
         public static T[] GetActionsIgnoringLegality<T>(
             Square[,] board,
             bool isWhiteTurn,
@@ -29,6 +42,18 @@ namespace Chess.Game.Actions
             return actionArray;
         }
 
+        /// <summary>
+        /// Gets all actions a single square can take.
+        /// </summary>
+        /// <typeparam name="T">The absolute action.</typeparam>
+        /// <typeparam name="U">The relative action.</typeparam>
+        /// <param name="square">The square to get actions from.</param>
+        /// <param name="file">The number of files.</param>
+        /// <param name="rank">The number of ranks.</param>
+        /// <param name="isWhiteTurn">Whose turn it is.</param>
+        /// <param name="getAbsoluteFromRelative">Function for converting a relative action into an absolute action.</param>
+        /// <param name="getActions">Function for getting all relative actions from a piece.</param>
+        /// <returns>Absolute actions.</returns>
         public static T[] GetActionsFromSquare<T, U>(
             Square square,
             int file,
@@ -64,6 +89,13 @@ namespace Chess.Game.Actions
             return actionAbsoluteArray;
         }
 
+        /// <summary>
+        /// Checks whether the square is on the board.
+        /// </summary>
+        /// <param name="square">The square to check.</param>
+        /// <param name="files">The number of files.</param>
+        /// <param name="ranks">The number of ranks.</param>
+        /// <returns>Whether the square is on the board.</returns>
         public static bool IsSquareOnBoard(SquareAbsolute square, int files, int ranks)
         {
             return
@@ -73,6 +105,13 @@ namespace Chess.Game.Actions
                 (square.Rank >= 0);
         }
 
+        /// <summary>
+        /// Checks whether all squares are on the board.
+        /// </summary>
+        /// <param name="squares">The squares to check.</param>
+        /// <param name="files">The number of files.</param>
+        /// <param name="ranks">The number of ranks.</param>
+        /// <returns>Whether all squares are on the board.</returns>
         public static bool AreSquaresOnBoard(SquareAbsolute[] squares, int files, int ranks)
         {
             var isSquareOnBoard = squares.Select(x => IsSquareOnBoard(x, files, ranks));
@@ -80,6 +119,12 @@ namespace Chess.Game.Actions
             return areSquaresOnBoard;
         }
 
+        /// <summary>
+        /// Checks whether all passing squares are empty.
+        /// </summary>
+        /// <param name="passingSquares">The passing squares to check.</param>
+        /// <param name="board">The board to check for empty squares.</param>
+        /// <returns>Whether all passing squares are empty.</returns>
         public static bool ArePassingSquaresEmpty(SquareAbsolute[] passingSquares, Square[,] board)
         {
             if (passingSquares.Length == 0)

@@ -33,14 +33,6 @@ namespace Chess.Game.Actions
             return moves;
         }
 
-        /// <summary>
-        /// Get both legal and illegal moves.
-        /// </summary>
-        /// <param name="square">The square to get moves from.</param>
-        /// <param name="file">The number of files.</param>
-        /// <param name="rank">The number of ranks.</param>
-        /// <param name="isWhiteTurn">Whose turn it is.</param>
-        /// <returns>Legal and illegal moves.</returns>
         private static MoveAbsolute[] GetMovesFromSquare(Square square, int file, int rank, bool isWhiteTurn)
         {
             var startSquare = new SquareAbsolute(file, rank);
@@ -56,13 +48,6 @@ namespace Chess.Game.Actions
             return moves;
         }
 
-        /// <summary>
-        /// Get moves that stay on the board.
-        /// </summary>
-        /// <param name="moves">The moves to check.</param>
-        /// <param name="files">The number of files.</param>
-        /// <param name="ranks">The number of ranks.</param>
-        /// <returns>Only moves that stay on the board.</returns>
         private static IEnumerable<MoveAbsolute> GetMovesStayingOnBoard(MoveAbsolute[] moves, int files, int ranks)
         {
             var movesStayingOnBoard = moves.Where(
@@ -70,12 +55,6 @@ namespace Chess.Game.Actions
             return movesStayingOnBoard;
         }
 
-        /// <summary>
-        /// Get moves with empty passing squares.
-        /// </summary>
-        /// <param name="moves">The moves to check.</param>
-        /// <param name="board">The board to check for empty squares.</param>
-        /// <returns>Only moves with empty passing squares.</returns>
         private static IEnumerable<MoveAbsolute> GetMovesWithEmptyPassingSquares(
             IEnumerable<MoveAbsolute> moves,
             Square[,] board)

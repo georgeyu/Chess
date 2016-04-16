@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace Chess.Game.Actions
 {
+    /// <summary>
+    /// Gets all legal captures from a position.
+    /// </summary>
     internal static class CaptureGetter
     {
+        /// <summary>
+        /// Gets all legal captures based on whose turn it is.
+        /// </summary>
+        /// <param name="position">The position to get captures from.</param>
+        /// <returns>Absolute captures.</returns>
         public static CaptureAbsolute[] GetCaptures(Position position)
         {
             int files = position.Board.GetLength(Constants.FileIndex);
