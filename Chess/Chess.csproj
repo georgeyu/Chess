@@ -83,6 +83,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Constants.cs" />
+    <Compile Include="Game\ActionGetterUtil.cs" />
+    <Compile Include="Game\CaptureGetter.cs" />
     <Compile Include="Game\MoveGetter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
