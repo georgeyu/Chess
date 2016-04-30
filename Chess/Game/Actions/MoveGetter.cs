@@ -29,7 +29,9 @@ namespace Chess.Game.Actions
                 GetMovesFromSquare);
             var movesStayingOnBoard = GetMovesStayingOnBoard(movesIgnoringLegality, files, ranks);
             var movesWithEmptyPassingSquares = GetMovesWithEmptyPassingSquares(movesStayingOnBoard, position.Board);
-            var moves = movesWithEmptyPassingSquares.ToArray();
+            var movesWithSafeKing = movesWithEmptyPassingSquares.Where(
+                x => KingSafetyChecker.IsKingSafe(position, x));
+            var moves = movesWithSafeKing.ToArray();
             return moves;
         }
 

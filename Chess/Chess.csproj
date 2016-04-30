@@ -87,6 +87,7 @@
     <Compile Include="Game\Actions\CaptureGetter.cs" />
     <Compile Include="Game\FenGetter.cs" />
     <Compile Include="Game\Actions\MoveGetter.cs" />
+    <Compile Include="Game\Actions\KingSafetyChecker.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

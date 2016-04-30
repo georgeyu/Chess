@@ -54,15 +54,15 @@ namespace ChessTest
             var white1 = new MoveAbsolute(
                 squareByString["e2"],
                 new SquareAbsolute[] { squareByString["e3"], squareByString["e4"] });
-            position.MakeMove(white1);
+            position.Move(white1);
             var black1 = new MoveAbsolute(
                 squareByString["e7"],
                 new SquareAbsolute[] { squareByString["e6"], squareByString["e5"] });
-            position.MakeMove(black1);
+            position.Move(black1);
             var white2 = new MoveAbsolute(squareByString["g1"], new SquareAbsolute[] { squareByString["f3"] });
-            position.MakeMove(white2);
+            position.Move(white2);
             var black2 = new MoveAbsolute(squareByString["b8"], new SquareAbsolute[] { squareByString["c6"] });
-            position.MakeMove(black2);
+            position.Move(black2);
             var white3 = new MoveAbsolute(
                 squareByString["f1"],
                 new SquareAbsolute[] {
@@ -71,7 +71,7 @@ namespace ChessTest
                     squareByString["c4"],
                     squareByString["b5"]
                 });
-            position.MakeMove(white3);
+            position.Move(white3);
             string fen = FenGetter.GetFen(position);
             Assert.IsTrue(fen == RuyLopezFen);
         }
@@ -83,35 +83,35 @@ namespace ChessTest
             var white1 = new MoveAbsolute(
                 squareByString["e2"],
                 new SquareAbsolute[] { squareByString["e3"], squareByString["e4"] });
-            position.MakeMove(white1);
+            position.Move(white1);
             var black1 = new MoveAbsolute(
                 squareByString["c7"],
                 new SquareAbsolute[] { squareByString["c6"], squareByString["c5"] });
-            position.MakeMove(black1);
+            position.Move(black1);
             var white2 = new MoveAbsolute(squareByString["g1"], new SquareAbsolute[] { squareByString["f3"] });
-            position.MakeMove(white2);
+            position.Move(white2);
             var black2 = new MoveAbsolute(squareByString["d7"], new SquareAbsolute[] { squareByString["d6"] });
-            position.MakeMove(black2);
+            position.Move(black2);
             var white3 = new MoveAbsolute(
                 squareByString["d2"],
                 new SquareAbsolute[] { squareByString["d3"], squareByString["d4"] });
-            position.MakeMove(white3);
+            position.Move(white3);
             CaptureAbsolute black3 = new CaptureAbsolute(
                 squareByString["c5"],
                 squareByString["d4"],
                 new SquareAbsolute[] { });
-            position.MakeCapture(black3);
+            position.Capture(black3);
             CaptureAbsolute white4 = new CaptureAbsolute(
                 squareByString["f3"],
                 squareByString["d4"],
                 new SquareAbsolute[] { });
-            position.MakeCapture(white4);
+            position.Capture(white4);
             var black4 = new MoveAbsolute(squareByString["g8"], new SquareAbsolute[] { squareByString["f6"] });
-            position.MakeMove(black4);
+            position.Move(black4);
             var white5 = new MoveAbsolute(squareByString["b1"], new SquareAbsolute[] { squareByString["c3"] });
-            position.MakeMove(white5);
+            position.Move(white5);
             var black5 = new MoveAbsolute(squareByString["a7"], new SquareAbsolute[] { squareByString["a6"] });
-            position.MakeMove(black5);
+            position.Move(black5);
             string fen = FenGetter.GetFen(position);
             Assert.AreEqual(fen, NajdorfFen);
         }
@@ -130,6 +130,53 @@ namespace ChessTest
                 position = TakeRandomAction(position);
             }
             File.WriteAllLines(MakeActionRandomLogFile, text);
+        }
+
+        [TestMethod]
+        public void GetMoves_InCheck_Count()
+        {
+            var position = new Position();
+            var white1 = new MoveAbsolute(squareByString["e2"], new SquareAbsolute[] { squareByString["e3"] });
+            position.Move(white1);
+            var black1 = new MoveAbsolute(squareByString["f7"], new SquareAbsolute[] { squareByString["f6"] });
+            position.Move(black1);
+            var white2 = new MoveAbsolute(
+                squareByString["d1"],
+                new SquareAbsolute[] {
+                    squareByString["e2"],
+                    squareByString["f3"],
+                    squareByString["g4"],
+                    squareByString["h5"] });
+            position.Move(white2);
+            var moves = MoveGetter.GetMoves(position);
+            Assert.IsTrue(moves.Length == 1);
+        }
+
+        [TestMethod]
+        public void GetCaptures_InCheck_Count()
+        {
+            var position = new Position();
+            var white1 = new MoveAbsolute(
+                squareByString["f2"],
+                new SquareAbsolute[] { squareByString["f3"], squareByString["f4"] });
+            position.Move(white1);
+            var black1 = new MoveAbsolute(
+                squareByString["e7"],
+                new SquareAbsolute[] { squareByString["e6"], squareByString["e5"] });
+            position.Move(black1);
+            var white2 = new MoveAbsolute(squareByString["g1"], new SquareAbsolute[] { squareByString["f3"] });
+            position.Move(white2);
+            var black2 = new MoveAbsolute(
+                squareByString["d8"],
+                new SquareAbsolute[] {
+                    squareByString["e7"],
+                    squareByString["f6"],
+                    squareByString["g5"],
+                    squareByString["h4"]
+                });
+            position.Move(black2);
+            var captures = CaptureGetter.GetCaptures(position);
+            Assert.IsTrue(captures.Length == 1);
         }
 
         private string GetBoardStringFromPosition(Position position)
@@ -164,11 +211,11 @@ namespace ChessTest
             int index = random.Next(0, moves.Length + captures.Length - 1);
             if (index < moves.Length)
             {
-                position.MakeMove(moves[index]);
+                position.Move(moves[index]);
             }
             else
             {
-                position.MakeCapture(captures[index - moves.Length]);
+                position.Capture(captures[index - moves.Length]);
             }
             return position;
         }

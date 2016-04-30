@@ -49,7 +49,7 @@ namespace Chess.Game
         /// Changes the position to match the move made.
         /// </summary>
         /// <param name="move">Move to make.</param>
-        public void MakeMove(MoveAbsolute move)
+        public void Move(MoveAbsolute move)
         {
             var startSquare = Board[move.StartSquare.File, move.StartSquare.Rank];
             Board[move.StartSquare.File, move.StartSquare.Rank] = new EmptySquare();
@@ -61,10 +61,26 @@ namespace Chess.Game
         }
 
         /// <summary>
+        /// Undoes the move on the position.
+        /// </summary>
+        /// <param name="move">The move to undo.</param>
+        /// <param name="hasMoved">Whether the piece had moved before the move.</param>
+        public void UndoMove(MoveAbsolute move, bool hasMoved)
+        {
+            SquareAbsolute finalSquareLocation = move.PassingSquares.Last();
+            var finalSquare = Board[finalSquareLocation.File, finalSquareLocation.Rank];
+            var piece = finalSquare as Piece;
+            piece.HasMoved = hasMoved;
+            Board[finalSquareLocation.File, finalSquareLocation.Rank] = new EmptySquare();
+            Board[move.StartSquare.File, move.StartSquare.Rank] = piece;
+            DecrementTurn();
+        }
+
+        /// <summary>
         /// Changes the position to match the capture made.
         /// </summary>
         /// <param name="capture">Capture to make.</param>
-        public void MakeCapture(CaptureAbsolute capture)
+        public void Capture(CaptureAbsolute capture)
         {
             var startSquare = Board[capture.StartSquare.File, capture.StartSquare.Rank];
             var piece = startSquare as Piece;
@@ -72,6 +88,46 @@ namespace Chess.Game
             piece.HasMoved = true;
             Board[capture.CaptureSquare.File, capture.CaptureSquare.Rank] = piece;
             IncrementTurn();
+        }
+
+        /// <summary>
+        /// Undoes the capture on the position.
+        /// </summary>
+        /// <param name="capture">The capture to undo.</param>
+        /// <param name="hasMoved">Whether the capturing piece had moved before the capture.</param>
+        /// <param name="capturedPiece">The captured piece.</param>
+        public void UndoCapture(CaptureAbsolute capture, bool hasMoved, Piece capturedPiece)
+        {
+            var finalSquare = Board[capture.CaptureSquare.File, capture.CaptureSquare.Rank];
+            var capturingPiece = finalSquare as Piece;
+            capturingPiece.HasMoved = hasMoved;
+            Board[capture.StartSquare.File, capture.StartSquare.Rank] = capturingPiece;
+            Board[capture.CaptureSquare.File, capture.CaptureSquare.Rank] = capturedPiece;
+            DecrementTurn();
+        }
+
+        /// <summary>
+        /// Checks whether the piece has moved.
+        /// </summary>
+        /// <param name="squareLocation">The square to check.</param>
+        /// <returns>Whether the piece has moved.</returns>
+        public bool HasMoved(SquareAbsolute squareLocation)
+        {
+            var square = Board[squareLocation.File, squareLocation.Rank];
+            var piece = square as Piece;
+            return piece.HasMoved;
+        }
+
+        /// <summary>
+        /// Gets the piece at a square.
+        /// </summary>
+        /// <param name="squareLocation">The square to get the piece from.</param>
+        /// <returns>The piece.</returns>
+        public Piece GetPiece(SquareAbsolute squareLocation)
+        {
+            var square = Board[squareLocation.File, squareLocation.Rank];
+            var piece = square as Piece;
+            return piece;
         }
 
         private void SetupBoard()
@@ -112,6 +168,15 @@ namespace Chess.Game
             if (!IsWhiteTurn)
             {
                 TurnNumber++;
+            }
+            IsWhiteTurn = !IsWhiteTurn;
+        }
+
+        private void DecrementTurn()
+        {
+            if (IsWhiteTurn)
+            {
+                TurnNumber--;
             }
             IsWhiteTurn = !IsWhiteTurn;
         }

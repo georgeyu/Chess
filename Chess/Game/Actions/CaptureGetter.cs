@@ -19,6 +19,19 @@ namespace Chess.Game.Actions
         /// <returns>Absolute captures.</returns>
         public static CaptureAbsolute[] GetCaptures(Position position)
         {
+            var capturesIgnoringKingSafety = GetCapturesIgnoringKingSafety(position);
+            var capturesWithSafeKing = capturesIgnoringKingSafety.Where(x => KingSafetyChecker.IsKingSafe(position, x));
+            var captures = capturesWithSafeKing.ToArray();
+            return captures;
+        }
+
+        /// <summary>
+        /// Gets all captures ignoring whether the king can be captured next turn.
+        /// </summary>
+        /// <param name="position">The position to get captures from.</param>
+        /// <returns>All captures ignoring whether the king can be captured next turn.</returns>
+        public static CaptureAbsolute[] GetCapturesIgnoringKingSafety(Position position)
+        {
             int files = position.Board.GetLength(Constants.FileIndex);
             int ranks = position.Board.GetLength(Constants.RankIndex);
             var capturesIgnoringLegality = ActionGetterUtil.GetActionsIgnoringLegality(
