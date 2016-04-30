@@ -106,30 +106,6 @@ namespace Chess.Game
             DecrementTurn();
         }
 
-        /// <summary>
-        /// Checks whether the piece has moved.
-        /// </summary>
-        /// <param name="squareLocation">The square to check.</param>
-        /// <returns>Whether the piece has moved.</returns>
-        public bool HasMoved(SquareAbsolute squareLocation)
-        {
-            var square = Board[squareLocation.File, squareLocation.Rank];
-            var piece = square as Piece;
-            return piece.HasMoved;
-        }
-
-        /// <summary>
-        /// Gets the piece at a square.
-        /// </summary>
-        /// <param name="squareLocation">The square to get the piece from.</param>
-        /// <returns>The piece.</returns>
-        public Piece GetPiece(SquareAbsolute squareLocation)
-        {
-            var square = Board[squareLocation.File, squareLocation.Rank];
-            var piece = square as Piece;
-            return piece;
-        }
-
         private void SetupBoard()
         {
             int files = Board.GetLength(Constants.FileIndex);

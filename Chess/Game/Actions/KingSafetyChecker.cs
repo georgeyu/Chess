@@ -18,7 +18,7 @@ namespace Chess.Game.Actions
         /// <returns>Whether the king can be captured after making the move.</returns>
         public static bool IsKingSafe(Position position, MoveAbsolute move)
         {
-            bool hasMoved = position.HasMoved(move.StartSquare);
+            bool hasMoved = HasMoved(position, move.StartSquare);
             position.Move(move);
             var isKingSafe = IsKingSafe(position);
             position.UndoMove(move, hasMoved);
@@ -33,12 +33,20 @@ namespace Chess.Game.Actions
         /// <returns>Whether the king can be captured after making the capture.</returns>
         public static bool IsKingSafe(Position position, CaptureAbsolute capture)
         {
-            bool hasMoved = position.HasMoved(capture.StartSquare);
-            Piece capturedPiece = position.GetPiece(capture.CaptureSquare);
+            bool hasMoved = HasMoved(position, capture.StartSquare);
+            var capturedSquare = position.Board[capture.CaptureSquare.File, capture.CaptureSquare.Rank];
+            var capturedPiece = capturedSquare as Piece;
             position.Capture(capture);
             var isKingSafe = IsKingSafe(position);
             position.UndoCapture(capture, hasMoved, capturedPiece);
             return isKingSafe;
+        }
+
+        private static bool HasMoved(Position position, SquareAbsolute squareLocation)
+        {
+            var square = position.Board[squareLocation.File, squareLocation.Rank];
+            var piece = square as Piece;
+            return piece.HasMoved;
         }
 
         private static bool IsKingSafe(Position position)
