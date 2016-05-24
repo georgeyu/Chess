@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Chess.Game.Pieces
+﻿namespace Chess.Game.Pieces
 {
     /// <summary>
     /// Represents a capture relative to a starting square.

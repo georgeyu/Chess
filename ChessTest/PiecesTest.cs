@@ -1,6 +1,4 @@
-﻿using Chess.Game;
-using Chess.Game.Pieces;
-using System;
+﻿using Chess.Game.Pieces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Chess;
 
@@ -139,13 +137,13 @@ namespace ChessTest
             Assert.IsTrue(captures.Length == (Constants.BoardLength - 1) * DiagonalVectors);
         }
 
-        private void TestMoves(Piece piece, int count)
+        private void TestMoves(IPiece piece, int count)
         {
-            SquareChange[][] moves = piece.GenerateMoves();
+            SquareChange[][] moves = piece.GenerateEmptyMoves();
             Assert.IsTrue(moves.Length == count);
         }
 
-        private void TestCaptures(Piece piece, int count)
+        private void TestCaptures(IPiece piece, int count)
         {
             CaptureRelative[] captures = piece.GenerateCaptures();
             Assert.IsTrue(captures.Length == count);

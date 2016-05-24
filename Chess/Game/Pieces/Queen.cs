@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Chess.Game.Pieces
 {
@@ -11,7 +6,7 @@ namespace Chess.Game.Pieces
     /// Represents a queen.
     /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Queen : Piece
+    internal class Queen : IPiece
     {
         private const string FenWhite = "Q";
         private const string FenBlack = "q";
@@ -26,7 +21,7 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GenerateMoves()
+        public SquareChange[][] GenerateEmptyMoves()
         {
             var moves = ActionGenerator.GenerateAllMoves(Constants.BoardLength - 1);
             return moves;

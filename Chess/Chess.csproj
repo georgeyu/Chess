@@ -83,31 +83,38 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Constants.cs" />
-    <Compile Include="Game\Actions\ActionGetterUtil.cs" />
-    <Compile Include="Game\Actions\CaptureGetter.cs" />
+    <Compile Include="Game\Moves\MoveGetter.cs" />
+    <Compile Include="Game\Moves\MovesUtil.cs" />
+    <Compile Include="Game\Moves\Capture.cs" />
+    <Compile Include="Game\Moves\CaptureGetter.cs" />
+    <Compile Include="Game\Moves\Castle.cs" />
+    <Compile Include="Game\Moves\EnPassant.cs" />
+    <Compile Include="Game\Moves\IMove.cs" />
+    <Compile Include="Game\Moves\EmptyMove.cs" />
+    <Compile Include="Game\Moves\Promote.cs" />
     <Compile Include="Game\FenGetter.cs" />
-    <Compile Include="Game\Actions\MoveGetter.cs" />
-    <Compile Include="Game\Actions\KingSafetyChecker.cs" />
+    <Compile Include="Game\Moves\EmptyMoveGetter.cs" />
+    <Compile Include="Game\Moves\KingSafetyChecker.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\Actions\CaptureAbsolute.cs" />
+    <Compile Include="Game\Moves\CaptureAbsolute.cs" />
     <Compile Include="Game\EmptySquare.cs" />
-    <Compile Include="Game\Actions\MoveAbsolute.cs" />
+    <Compile Include="Game\Moves\MoveAbsolute.cs" />
     <Compile Include="Game\Pieces\Bishop.cs" />
     <Compile Include="Game\Pieces\CaptureRelative.cs" />
     <Compile Include="Game\Pieces\King.cs" />
     <Compile Include="Game\Pieces\Knight.cs" />
     <Compile Include="Game\Pieces\ActionGenerator.cs" />
     <Compile Include="Game\Pieces\Pawn.cs" />
-    <Compile Include="Game\Pieces\Piece.cs" />
+    <Compile Include="Game\Pieces\IPiece.cs" />
     <Compile Include="Game\Position.cs" />
     <Compile Include="Game\Pieces\Queen.cs" />
     <Compile Include="Game\Pieces\Rook.cs" />
-    <Compile Include="Game\Square.cs" />
+    <Compile Include="Game\ISquare.cs" />
     <Compile Include="Game\Pieces\SquareChange.cs" />
     <Compile Include="Game\SquareAbsolute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

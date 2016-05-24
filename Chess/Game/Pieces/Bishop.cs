@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Chess.Game.Pieces
 {
@@ -11,7 +6,7 @@ namespace Chess.Game.Pieces
     /// Represents a bishop.
     /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Bishop : Piece
+    internal class Bishop : IPiece
     {
         private const string FenWhite = "B";
         private const string FenBlack = "b";
@@ -26,7 +21,7 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GenerateMoves()
+        public SquareChange[][] GenerateEmptyMoves()
         {
             SquareChange[][] moves = ActionGenerator.GenerateDiagonalMoves(Constants.BoardLength - 1);
             return moves;

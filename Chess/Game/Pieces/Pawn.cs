@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chess.Game.Pieces
 {
@@ -11,7 +7,7 @@ namespace Chess.Game.Pieces
     /// Represents a pawn.
     /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Pawn : Piece
+    internal class Pawn : IPiece
     {
         private const int unmovedDisplacement = 2;
         private const string FenWhite = "P";
@@ -29,7 +25,7 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GenerateMoves()
+        public SquareChange[][] GenerateEmptyMoves()
         {
             var moveList = new List<SquareChange[]>();
             var defaultSquareChange = new SquareChange(0, direction);

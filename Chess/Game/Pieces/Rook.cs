@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Chess.Game.Pieces
 {
@@ -11,7 +6,7 @@ namespace Chess.Game.Pieces
     /// Represents a rook.
     /// </summary>
     [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Rook : Piece
+    internal class Rook : IPiece
     {
         private const string FenWhite = "R";
         private const string FenBlack = "r";
@@ -26,7 +21,7 @@ namespace Chess.Game.Pieces
 
         public bool HasMoved { get; set; }
 
-        public SquareChange[][] GenerateMoves()
+        public SquareChange[][] GenerateEmptyMoves()
         {
             SquareChange[][] moves = ActionGenerator.GenerateStraightMoves(Constants.BoardLength - 1);
             return moves;
