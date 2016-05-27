@@ -1,41 +1,21 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
 
 namespace Chess.Game.Pieces
 {
-    /// <summary>
-    /// Represents a bishop.
-    /// </summary>
-    [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Bishop : IPiece
+    internal class Bishop : Piece
     {
-        private const string FenWhite = "B";
-        private const string FenBlack = "b";
+        private const string WhiteFen = "B";
 
-        public Bishop(bool isWhite, bool hasMoved = false)
+        public Bishop(bool white, bool moved = false) : base(WhiteFen, white, moved) { }
+
+        public override List<List<BoardVector>> GenerateEmptyMovesWithoutOrigin()
         {
-            IsWhite = isWhite;
-            HasMoved = hasMoved;
+            return MoveShiftGenerator.GenerateDiagonalMoves(Board.Length - 1);
         }
 
-        public bool IsWhite { get; private set; }
-
-        public bool HasMoved { get; set; }
-
-        public SquareChange[][] GenerateEmptyMoves()
+        public override List<List<BoardVector>> GenerateCapturesWithoutOrigin()
         {
-            SquareChange[][] moves = ActionGenerator.GenerateDiagonalMoves(Constants.BoardLength - 1);
-            return moves;
-        }
-
-        public CaptureRelative[] GenerateCaptures()
-        {
-            CaptureRelative[] captures = ActionGenerator.GenerateDiagonalCaptures(Constants.BoardLength - 1);
-            return captures;
-        }
-
-        public string GetFen()
-        {
-            return IsWhite ? FenWhite : FenBlack;
+            return MoveShiftGenerator.GenerateDiagonalMoves(Board.Length - 1);
         }
     }
 }

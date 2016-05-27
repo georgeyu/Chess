@@ -2,14 +2,14 @@
 
 namespace Chess.Game.Moves
 {
-    internal class Promote : IMove
+    internal class Promote : Move
     {
-        public void MakeMove(Position position)
+        public override void Change(Position position)
         {
             throw new NotImplementedException();
         }
 
-        public void UndoMove(Position position)
+        public override void UndoChange(Position position)
         {
             throw new NotImplementedException();
         }

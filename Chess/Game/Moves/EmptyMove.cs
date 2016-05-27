@@ -4,44 +4,40 @@ using System.Linq;
 
 namespace Chess.Game.Moves
 {
-    internal class EmptyMove : IMove
+    internal class EmptyMove : Move
     {
-        private readonly SquareAbsolute firstSquare;
-        private readonly SquareAbsolute lastSquare;
-
-        public EmptyMove(List<SquareAbsolute> squares, bool hasMoved)
+        public EmptyMove(List<BoardVector> squares, bool moved)
         {
-            Squares = squares;
-            HasMoved = hasMoved;
-            firstSquare = squares.First();
-            lastSquare = squares.Last();
+            StartSquareVector = squares.First();
+            EndSquareVector = squares.Last();
+            PassingSquares = squares.Skip(1).ToList();
+            Moved = moved;
         }
 
-        public List<SquareAbsolute> Squares { get; private set; }
+        public BoardVector StartSquareVector { get; private set; }
 
-        public bool HasMoved { get; private set; }
+        public BoardVector EndSquareVector { get; private set; }
 
-        public void MakeMove(Position position)
+        public List<BoardVector> PassingSquares { get; private set; }
+
+        public bool Moved { get; private set; }
+
+        public override void Change(Position position)
         {
-            ISquare startSquare = position.Board[firstSquare.File, firstSquare.Rank];
-            var piece = startSquare as IPiece;
-            piece.HasMoved = true;
-            var emptySquare = new EmptySquare();
-            position.Board[firstSquare.File, firstSquare.Rank] = emptySquare;
-            position.Board[lastSquare.File, lastSquare.Rank] = piece;
-            position.IncrementTurn();
+            ISquare startSquare = position.Board[StartSquareVector];
+            var piece = startSquare as Piece;
+            piece.Moved = true;
+            position.Board[StartSquareVector] = new EmptySquare();
+            position.Board[EndSquareVector] = piece;
         }
 
-        public void UndoMove(Position position)
+        public override void UndoChange(Position position)
         {
-
-            ISquare endSquare = position.Board[lastSquare.File, lastSquare.Rank];
-            var piece = endSquare as IPiece;
-            piece.HasMoved = HasMoved;
-            var emptySquare = new EmptySquare();
-            position.Board[lastSquare.File, lastSquare.Rank] = emptySquare;
-            position.Board[firstSquare.File, firstSquare.Rank] = piece;
-            position.DecrementTurn();
+            ISquare endSquare = position.Board[EndSquareVector];
+            var piece = endSquare as Piece;
+            piece.Moved = Moved;
+            position.Board[EndSquareVector] = new EmptySquare();
+            position.Board[StartSquareVector] = piece;
         }
     }
 }

@@ -1,13 +1,12 @@
 ﻿namespace Chess.Game
 {
-    /// <summary>
-    /// Represents an empty square.
-    /// </summary>
     internal class EmptySquare : ISquare
     {
+        public const string Fen = "E";
+
         public string GetFen()
         {
-            return Constants.EmptySquare;
+            return Fen;
         }
     }
 }

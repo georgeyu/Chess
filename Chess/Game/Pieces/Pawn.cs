@@ -1,59 +1,39 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Chess.Game.Pieces
 {
-    /// <summary>
-    /// Represents a pawn.
-    /// </summary>
-    [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Pawn : IPiece
+    internal class Pawn : Piece
     {
-        private const int unmovedDisplacement = 2;
-        private const string FenWhite = "P";
-        private const string FenBlack = "p";
+        private const int unmovedMove = 2;
+        private const string WhiteFen = "P";
         private readonly int direction;
 
-        public Pawn(bool isWhite, bool hasMoved = false)
+        public Pawn(bool white, bool moved = false) : base(WhiteFen, white, moved)
         {
-            IsWhite = isWhite;
-            HasMoved = hasMoved;
-            direction = isWhite ? 1 : -1;
+            direction = White ? 1 : -1;
         }
 
-        public bool IsWhite { get; private set; }
-
-        public bool HasMoved { get; set; }
-
-        public SquareChange[][] GenerateEmptyMoves()
+        public override List<List<BoardVector>> GenerateEmptyMovesWithoutOrigin()
         {
-            var moveList = new List<SquareChange[]>();
-            var defaultSquareChange = new SquareChange(0, direction);
-            SquareChange[] defaultMove = { defaultSquareChange };
-            moveList.Add(defaultMove);
-            if (!HasMoved)
+            var singleSquare = new BoardVector(0, direction);
+            var emptyMoves = new List<List<BoardVector>>()
             {
-                var unmovedSquareChange = new SquareChange(0, direction * unmovedDisplacement);
-                SquareChange[] unmovedMove = { defaultSquareChange, unmovedSquareChange };
-                moveList.Add(unmovedMove);
+                new List<BoardVector>() { singleSquare }
+            };
+            if (!Moved)
+            {
+                emptyMoves.Add(new List<BoardVector>() { singleSquare, new BoardVector(0, direction * unmovedMove) });
             }
-            var moveArray = moveList.ToArray();
-            return moveArray;
+            return emptyMoves;
         }
 
-        public CaptureRelative[] GenerateCaptures()
+        public override List<List<BoardVector>> GenerateCapturesWithoutOrigin()
         {
-            var leftSquareChange = new SquareChange(-1, direction);
-            var rightSquareChange = new SquareChange(1, direction);
-            CaptureRelative leftCapture = new CaptureRelative(leftSquareChange, new SquareChange[] { });
-            CaptureRelative rightCapture = new CaptureRelative(rightSquareChange, new SquareChange[] { });
-            CaptureRelative[] captures = { leftCapture, rightCapture };
-            return captures;
-        }
-
-        public string GetFen()
-        {
-            return IsWhite ? FenWhite : FenBlack;
+            return new List<List<BoardVector>>()
+            {
+                new List<BoardVector>() { new BoardVector(-1, direction) },
+                new List<BoardVector>() { new BoardVector(1, direction) }
+            };
         }
     }
 }

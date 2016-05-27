@@ -1,41 +1,21 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
 
 namespace Chess.Game.Pieces
 {
-    /// <summary>
-    /// Represents a rook.
-    /// </summary>
-    [DebuggerDisplay("IsWhite: {IsWhite}, HasMoved: {HasMoved}")]
-    internal class Rook : IPiece
+    internal class Rook : Piece
     {
-        private const string FenWhite = "R";
-        private const string FenBlack = "r";
+        private const string WhiteFen = "R";
 
-        public Rook(bool isWhite, bool hasMoved = false)
+        public Rook(bool white, bool moved = false) : base(WhiteFen, white, moved) { }
+
+        public override List<List<BoardVector>> GenerateEmptyMovesWithoutOrigin()
         {
-            IsWhite = isWhite;
-            HasMoved = hasMoved;
+            return MoveShiftGenerator.GenerateStraightMoves(Board.Length - 1);
         }
 
-        public bool IsWhite { get; private set; }
-
-        public bool HasMoved { get; set; }
-
-        public SquareChange[][] GenerateEmptyMoves()
+        public override List<List<BoardVector>> GenerateCapturesWithoutOrigin()
         {
-            SquareChange[][] moves = ActionGenerator.GenerateStraightMoves(Constants.BoardLength - 1);
-            return moves;
-        }
-
-        public CaptureRelative[] GenerateCaptures()
-        {
-            CaptureRelative[] captures = ActionGenerator.GenerateStraightCaptures(Constants.BoardLength - 1);
-            return captures;
-        }
-
-        public string GetFen()
-        {
-            return IsWhite ? FenWhite : FenBlack;
+            return MoveShiftGenerator.GenerateStraightMoves(Board.Length - 1);
         }
     }
 }

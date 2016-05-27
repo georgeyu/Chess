@@ -4,126 +4,55 @@ using System.Linq;
 
 namespace Chess.Game.Moves
 {
-    /// <summary>
-    /// Gets all legal captures from a position.
-    /// </summary>
     internal static class CaptureGetter
     {
-        /// <summary>
-        /// Gets all legal captures based on whose turn it is.
-        /// </summary>
-        /// <param name="position">The position to get captures from.</param>
-        /// <returns>Absolute captures.</returns>
-        public static List<IMove> GetCaptures(Position position)
+        public static List<Capture> GetCaptures(Position position)
         {
             var capturesIgnoringKingSafety = GetCapturesIgnoringKingSafety(position);
-            var capturesWithSafeKing = capturesIgnoringKingSafety.Where(x => KingSafetyChecker.IsKingSafe(position, x));
-            var captures = capturesWithSafeKing.ToList();
-            return captures;
+            return capturesIgnoringKingSafety.Where(x => x.KingSafe(position)).ToList();
         }
 
-        /// <summary>
-        /// Gets all captures ignoring whether the king can be captured next turn.
-        /// </summary>
-        /// <param name="position">The position to get captures from.</param>
-        /// <returns>All captures ignoring whether the king can be captured next turn.</returns>
-        public static List<IMove> GetCapturesIgnoringKingSafety(Position position)
+        public static List<Capture> GetCapturesIgnoringKingSafety(Position position)
         {
-            int files = position.Board.GetLength(Constants.FileIndex);
-            int ranks = position.Board.GetLength(Constants.RankIndex);
-            var moves = new List<IMove>();
-            for (var i = 0; i < files; i++)
+            var moves = new List<Capture>();
+            for (var i = 0; i < position.Board.FileCount; i++)
             {
-                for (var j = 0; j < ranks; j++)
+                for (var j = 0; j < position.Board.RankCount; j++)
                 {
                     ISquare square = position.Board[i, j];
-                    var piece = square as IPiece;
-                    if (piece == null)
+                    var piece = square as Piece;
+                    if ((piece == null) || piece.White != position.WhiteMove)
                     {
                         continue;
                     }
-                    if (piece.IsWhite != position.IsWhiteTurn)
-                    {
-                        continue;
-                    }
-                    var relativeCaptures = piece.GenerateCaptures();
-                    var absoluteCaptures = relativeCaptures.Select(x => GetCaptureAbsoluteFromRelative(x, i, j));
-                    var capturesStayingOnBoard = GetCapturesStayingOnBoard(absoluteCaptures.ToList(), files, ranks);
-                    var allCaptures = capturesStayingOnBoard.Select(
-                        x => GetCaptureFromCaptureAbsolute(x, piece.HasMoved, position.Board)).ToList();
-                    var capturesWithEmptyPassingSquares = GetCapturesWithEmptyPassingSquares(allCaptures, position.Board);
-                    var capturesWhereFinalSquareIsEnemyPiece = GetCapturesWhereCaptureSquareIsEnemyPiece(capturesWithEmptyPassingSquares, position.Board);
-                    moves.AddRange(capturesWhereFinalSquareIsEnemyPiece);
+                    List<List<BoardVector>> moveVectors = piece.GenerateCaptures();
+                    IEnumerable<Capture> filteredMoves = moveVectors
+                        .Select(x => x.Select(y => new BoardVector(i + y.File, j + y.Rank)))
+                        .Where(x => x.All(y => position.Board.OnBoard(y)))
+                        .Select(x => GetCaptureFromCaptureOnBoard(x.ToList(), piece.Moved, position.Board))
+                        .Where(x => EnemyPiece(x.CaptureSquareVector, position.Board, position.WhiteMove))
+                        .Where(x => x.PassingSquares.All(y => position.Board.EmptySquare(y)));
+                    moves.AddRange(filteredMoves);
                 }
             }
             return moves;
         }
 
-        private static CaptureAbsolute GetCaptureAbsoluteFromRelative(
-            CaptureRelative captureRelative,
-            int file,
-            int rank)
+        private static Capture GetCaptureFromCaptureOnBoard(List<BoardVector> captureOnBoard, bool moved, Board board)
         {
-            var captureAbsolute = new CaptureAbsolute(
-                new SquareAbsolute(file, rank),
-                new SquareAbsolute(file + captureRelative.CaptureSquare.FileChange, rank + captureRelative.CaptureSquare.RankChange),
-                captureRelative.PassingSquares.Select(x => new SquareAbsolute(file + x.FileChange, rank + x.RankChange)).ToArray());
-            return captureAbsolute;
+            BoardVector captureSquare = captureOnBoard.Last();
+            var piece = board[captureSquare] as Piece;
+            return new Capture(captureOnBoard, moved, piece);
         }
 
-        private static Capture GetCaptureFromCaptureAbsolute(
-            CaptureAbsolute captureAbsolute,
-            bool hasMoved,
-            ISquare[,] board)
+        private static bool EnemyPiece(BoardVector square, Board board, bool white)
         {
-            var squares = new List<SquareAbsolute>();
-            squares.Add(captureAbsolute.StartSquare);
-            squares.AddRange(captureAbsolute.PassingSquares);
-            squares.Add(captureAbsolute.CaptureSquare);
-            ISquare capturedSquare = board[captureAbsolute.CaptureSquare.File, captureAbsolute.CaptureSquare.Rank];
-            var capturedPiece = capturedSquare as IPiece;
-            var capture = new Capture(squares, hasMoved, capturedPiece);
-            return capture;
-        }
-
-        private static List<CaptureAbsolute> GetCapturesStayingOnBoard(List<CaptureAbsolute> captures, int files, int ranks)
-        {
-            var capturesStayingOnBoard = captures.Where(
-                x =>
-                    MovesUtil.IsSquareOnBoard(x.CaptureSquare, files, ranks) &&
-                    (
-                        (x.PassingSquares.Length == 0) ||
-                        MovesUtil.AreSquaresOnBoard(x.PassingSquares.ToList(), files, ranks)
-                    ));
-            return capturesStayingOnBoard.ToList();
-        }
-
-        private static List<Capture> GetCapturesWithEmptyPassingSquares(
-            List<Capture> captures,
-            ISquare[,] board)
-        {
-            var capturesWithEmptyPassingSquares = captures.Where(
-                x => MovesUtil.ArePassingSquaresEmpty(x.PassingSquares, board)).ToList();
-            return capturesWithEmptyPassingSquares;
-        }
-
-        private static List<Capture> GetCapturesWhereCaptureSquareIsEnemyPiece(
-            List<Capture> captures,
-            ISquare[,] board)
-        {
-            var capturesWhereCaptureSquareIsEnemyPiece = captures.Where(x => IsCaptureSquareEnemyPiece(x, board));
-            return capturesWhereCaptureSquareIsEnemyPiece.ToList();
-        }
-
-        private static bool IsCaptureSquareEnemyPiece(Capture capture, ISquare[,] board)
-        {
-            if (board[capture.Squares.Last().File, capture.Squares.Last().Rank] is EmptySquare)
+            var piece = board[square] as Piece;
+            if (piece == null)
             {
                 return false;
             }
-            var piece = board[capture.Squares.First().File, capture.Squares.First().Rank] as IPiece;
-            var pieceToCapture = board[capture.Squares.Last().File, capture.Squares.Last().Rank] as IPiece;
-            return piece.IsWhite != pieceToCapture.IsWhite;
+            return piece.White != white;
         }
     }
 }

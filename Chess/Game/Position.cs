@@ -1,92 +1,104 @@
-﻿using Chess.Game.Pieces;
+﻿using Chess.Game.Moves;
 using log4net;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Chess.Game
 {
     internal class Position
     {
-        private const int WhitePawnRank = 1;
-        private const int BlackPawnRank = Constants.BoardLength - 2;
-        private const int WhitePieceRank = 0;
-        private const int BlackPieceRank = Constants.BoardLength - 1;
-        private const int RookFileOffset = 0;
-        private const int KnightFileOffset = 1;
-        private const int BishopFileOffset = 2;
-        private const int QueenFile = 3;
-        private const int KingFile = 4;
+        public const string FenDelimiter = "/";
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public Position()
         {
-            IsWhiteTurn = true;
-            TurnNumber = 1;
-            Board = new ISquare[Constants.BoardLength, Constants.BoardLength];
-            SetupBoard();
+            WhiteMove = true;
+            MoveCount = 1;
+            Board = new Board();
         }
 
-        public Position(ISquare[,] board, bool isWhiteTurn = true, int turnNumber = 1)
-        {
-            Board = board;
-            IsWhiteTurn = isWhiteTurn;
-            TurnNumber = turnNumber;
-        }
+        public Board Board { get; private set; }
 
-        public bool IsWhiteTurn { get; private set; }
+        public bool WhiteMove { get; private set; }
 
-        public int TurnNumber { get; private set; }
-
-        public ISquare[,] Board { get; private set; }
+        public int MoveCount { get; private set; }
 
         public void IncrementTurn()
         {
-            if (!IsWhiteTurn)
+            if (!WhiteMove)
             {
-                TurnNumber++;
+                MoveCount++;
             }
-            IsWhiteTurn = !IsWhiteTurn;
+            WhiteMove = !WhiteMove;
         }
 
         public void DecrementTurn()
         {
-            if (IsWhiteTurn)
+            if (WhiteMove)
             {
-                TurnNumber--;
+                MoveCount--;
             }
-            IsWhiteTurn = !IsWhiteTurn;
+            WhiteMove = !WhiteMove;
         }
 
-        private void SetupBoard()
+        public bool KingSafe()
         {
-            int files = Board.GetLength(Constants.FileIndex);
-            for (var i = 0; i < Constants.BoardLength; i++)
+            List<Capture> captures = CaptureGetter.GetCapturesIgnoringKingSafety(this);
+            foreach (Capture capture in captures)
             {
-                for (var j = 0; j < Constants.BoardLength; j++)
+                capture.MakeMove(this);
+                bool kingExists = Board.KingExists(WhiteMove);
+                capture.UndoMove(this);
+                if (!kingExists)
                 {
-                    Board[i, j] = new EmptySquare();
+                    return false;
                 }
             }
-            for (var i = 0; i < Constants.BoardLength; i++)
+            return true;
+        }
+
+        public string GetFen()
+        {
+            var squareFens = "";
+            for (var i = Board.RankCount - 1; i >= 0; i--)
             {
-                Board[i, WhitePawnRank] = new Pawn(true);
-                Board[i, BlackPawnRank] = new Pawn(false);
+                for (var j = 0; j < Board.FileCount; j++)
+                {
+                    string squareFen = Board[j, i].GetFen();
+                    squareFens += squareFen;
+                }
+                if (i != 0)
+                {
+                    squareFens += FenDelimiter;
+                }
             }
-            Board[RookFileOffset, WhitePieceRank] = new Rook(true);
-            Board[KnightFileOffset, WhitePieceRank] = new Knight(true);
-            Board[BishopFileOffset, WhitePieceRank] = new Bishop(true);
-            Board[QueenFile, WhitePieceRank] = new Queen(true);
-            Board[KingFile, WhitePieceRank] = new King(true);
-            Board[Constants.BoardLength - BishopFileOffset - 1, WhitePieceRank] = new Bishop(true);
-            Board[Constants.BoardLength - KnightFileOffset - 1, WhitePieceRank] = new Knight(true);
-            Board[Constants.BoardLength - RookFileOffset - 1, WhitePieceRank] = new Rook(true);
-            Board[RookFileOffset, BlackPieceRank] = new Rook(false);
-            Board[KnightFileOffset, BlackPieceRank] = new Knight(false);
-            Board[BishopFileOffset, BlackPieceRank] = new Bishop(false);
-            Board[QueenFile, BlackPieceRank] = new Queen(false);
-            Board[KingFile, BlackPieceRank] = new King(false);
-            Board[Constants.BoardLength - BishopFileOffset - 1, BlackPieceRank] = new Bishop(false);
-            Board[Constants.BoardLength - KnightFileOffset - 1, BlackPieceRank] = new Knight(false);
-            Board[Constants.BoardLength - RookFileOffset - 1, BlackPieceRank] = new Rook(false);
+            var boardFen = String.Join(FenDelimiter, squareFens);
+            string fen = ReplaceConsecutiveEmptySquaresWithIntegers(boardFen);
+            return fen;
+        }
+
+        private static string ReplaceConsecutiveEmptySquaresWithIntegers(string fenWithEmptySquares)
+        {
+            int emptyCountInt = 0;
+            var fenSplit = System.Text.RegularExpressions.Regex.Split(fenWithEmptySquares, "");
+            var fen = "";
+            foreach (string square in fenSplit)
+            {
+                if (square == EmptySquare.Fen)
+                {
+                    emptyCountInt++;
+                    continue;
+                }
+                if (emptyCountInt != 0)
+                {
+                    var emptyCountString = emptyCountInt.ToString();
+                    emptyCountInt = 0;
+                    fen += emptyCountString;
+                }
+                fen += square;
+            }
+            return fen;
         }
     }
 }

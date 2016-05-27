@@ -4,54 +4,45 @@ using System.Linq;
 
 namespace Chess.Game.Moves
 {
-    internal class Capture : IMove
+    internal class Capture : Move
     {
-        private readonly SquareAbsolute startSquareLocation;
-        private readonly SquareAbsolute captureSquareLocation;
-
-        public Capture(
-            List<SquareAbsolute> squares,
-            bool hasMoved,
-            IPiece capturedPiece)
+        public Capture(List<BoardVector> squares, bool moved, Piece capturedPiece)
         {
-            Squares = squares;
-            HasMoved = hasMoved;
+            StartSquareVector = squares.First();
+            CaptureSquareVector = squares.Last();
+            Moved = moved;
             CapturedPiece = capturedPiece;
-            startSquareLocation = squares.First();
-            captureSquareLocation = squares.Last();
-            if (squares.Count > 2)
-            {
-                PassingSquares = squares.Skip(1).Take(squares.Count - 2).ToList();
-            }
+            PassingSquares = squares
+                .Except(new List<BoardVector>() { StartSquareVector, CaptureSquareVector })
+                .ToList();
         }
 
-        public List<SquareAbsolute> Squares { get; private set; }
+        public bool Moved { get; private set; }
 
-        public bool HasMoved { get; private set; }
+        public BoardVector StartSquareVector { get; private set; }
 
-        public IPiece CapturedPiece { get; private set; }
+        public BoardVector CaptureSquareVector { get; private set; }
 
-        public List<SquareAbsolute> PassingSquares { get; private set; }
+        public Piece CapturedPiece { get; private set; }
 
-        public void MakeMove(Position position)
+        public List<BoardVector> PassingSquares { get; private set; }
+
+        public override void Change(Position position)
         {
-            var emptySquare = new EmptySquare();
-            ISquare startSquare = position.Board[startSquareLocation.File, startSquareLocation.Rank];
-            var capturingPiece = startSquare as IPiece;
-            capturingPiece.HasMoved = true;
-            position.Board[startSquareLocation.File, startSquareLocation.Rank] = emptySquare;
-            position.Board[captureSquareLocation.File, captureSquareLocation.Rank] = capturingPiece;
-            position.IncrementTurn();
+            ISquare startSquare = position.Board[StartSquareVector];
+            var capturingPiece = (Piece)startSquare;
+            capturingPiece.Moved = true;
+            position.Board[StartSquareVector] = new EmptySquare();
+            position.Board[CaptureSquareVector] = capturingPiece;
         }
 
-        public void UndoMove(Position position)
+        public override void UndoChange(Position position)
         {
-            ISquare captureSquare = position.Board[captureSquareLocation.File, captureSquareLocation.Rank];
-            var capturingPiece = captureSquare as IPiece;
-            capturingPiece.HasMoved = HasMoved;
-            position.Board[captureSquareLocation.File, captureSquareLocation.Rank] = CapturedPiece;
-            position.Board[startSquareLocation.File, startSquareLocation.Rank] = capturingPiece;
-            position.DecrementTurn();
+            ISquare captureSquare = position.Board[CaptureSquareVector];
+            var capturingPiece = captureSquare as Piece;
+            capturingPiece.Moved = Moved;
+            position.Board[CaptureSquareVector] = CapturedPiece;
+            position.Board[StartSquareVector] = capturingPiece;
         }
     }
 }

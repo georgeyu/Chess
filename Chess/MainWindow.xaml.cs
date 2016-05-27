@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using Chess.Game.Pieces;
+using log4net;
 using log4net.Config;
 using System.Reflection;
 using System.Windows;
@@ -15,6 +16,7 @@ namespace Chess
         public MainWindow()
         {
             XmlConfigurator.Configure();
+            var boardVector = new BoardVector(2, -3);
             InitializeComponent();
         }
     }
