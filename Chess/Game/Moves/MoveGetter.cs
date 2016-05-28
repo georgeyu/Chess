@@ -11,6 +11,8 @@ namespace Chess.Game.Moves
             moves.AddRange(emptyMoves);
             var captures = CaptureGetter.GetCaptures(position);
             moves.AddRange(captures);
+            var castles = CastleGetter.GetCastles(position);
+            moves.AddRange(castles);
             return moves;
         }
     }

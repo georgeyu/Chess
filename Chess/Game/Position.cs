@@ -1,6 +1,5 @@
 ﻿using Chess.Game.Moves;
 using log4net;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -58,6 +57,14 @@ namespace Chess.Game
             return true;
         }
 
+        public bool KingInCheck()
+        {
+            IncrementTurn();
+            bool kingSafe = KingSafe();
+            DecrementTurn();
+            return !kingSafe;
+        }
+
         public string GetFen()
         {
             var squareFens = "";
@@ -73,7 +80,7 @@ namespace Chess.Game
                     squareFens += FenDelimiter;
                 }
             }
-            var boardFen = String.Join(FenDelimiter, squareFens);
+            var boardFen = string.Join(FenDelimiter, squareFens);
             string fen = ReplaceConsecutiveEmptySquaresWithIntegers(boardFen);
             return fen;
         }

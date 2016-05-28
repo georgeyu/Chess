@@ -83,6 +83,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Game\Board.cs" />
+    <Compile Include="Game\Moves\CastleGetter.cs" />
     <Compile Include="Game\Moves\MoveGetter.cs" />
     <Compile Include="Game\Moves\Capture.cs" />
     <Compile Include="Game\Moves\CaptureGetter.cs" />

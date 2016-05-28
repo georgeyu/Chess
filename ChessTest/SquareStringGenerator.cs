@@ -8,7 +8,7 @@ namespace ChessTest
     {
         public const string Files = "abcdefgh";
 
-        public static Dictionary<string, BoardVector> GenerateSquaresByString()
+        public static Dictionary<string, BoardVector> GenerateSquareStrings()
         {
             var squareByString = new Dictionary<string, BoardVector>();
             for (var i = 0; i < Board.Length; i++)

@@ -6,15 +6,15 @@ namespace Chess.Game
     internal class Board
     {
         public const int Length = 8;
+        public const int KingFile = 4;
+        public const int PieceRankOffset = 0;
+        public const int RookFileOffset = 0;
         private const int FilesIndex = 0;
         private const int RanksIndex = 1;
         private const int PawnRankOffset = 1;
-        private const int PieceRankOffset = 0;
-        private const int RookFileOffset = 0;
         private const int KnightFileOffset = 1;
         private const int BishopFileOffset = 2;
         private const int QueenFile = 3;
-        private const int KingFile = 4;
         private readonly ISquare[,] squares;
 
         public Board()
