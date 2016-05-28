@@ -22,7 +22,7 @@ namespace ChessTest
         public void GetMoves_Start_Count()
         {
             var position = new Position();
-            List<Move> moves = MoveGetter.GetMoves(position);
+            List<Move> moves = position.GetMoves();
             Assert.IsTrue(moves.Count == StartMoveCount);
         }
 
@@ -47,7 +47,7 @@ namespace ChessTest
                 false
             );
             white2.MakeMove(position);
-            var moves = MoveGetter.GetMoves(position);
+            var moves = position.GetMoves();
             Assert.IsTrue(moves.Count == 1);
         }
 
@@ -67,7 +67,7 @@ namespace ChessTest
             white3.MakeMove(position);
             var black3 = new EmptyMove(new List<BoardVector>() { squareByString["c7"], squareByString["c6"] }, false);
             black3.MakeMove(position);
-            List<Move> moves = MoveGetter.GetMoves(position);
+            List<Move> moves = position.GetMoves();
             Assert.IsTrue(moves.Count == CastleLegalTestMoveCount);
         }
     }

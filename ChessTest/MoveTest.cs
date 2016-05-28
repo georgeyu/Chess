@@ -109,17 +109,16 @@ namespace ChessTest
                 text.Add(move + filler);
                 string board = GetBoardString(position);
                 text.Add(board + Environment.NewLine);
-                MakeRandomMove(position);
+                var moves = position.GetMoves();
+                if (moves.Count == 0)
+                {
+                    break;
+                }
+                var random = new Random();
+                int index = random.Next(0, moves.Count - 1);
+                moves[index].MakeMove(position);
             }
             File.WriteAllLines(RandomMovesFile, text);
-        }
-
-        private void MakeRandomMove(Position position)
-        {
-            var moves = MoveGetter.GetMoves(position);
-            var random = new Random();
-            int index = random.Next(0, moves.Count - 1);
-            moves[index].MakeMove(position);
         }
 
         private string GetBoardString(Position position)

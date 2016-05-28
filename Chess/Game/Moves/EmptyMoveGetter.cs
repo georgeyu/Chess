@@ -6,30 +6,36 @@ using System.Reflection;
 
 namespace Chess.Game.Moves
 {
-    internal static class EmptyMoveGetter
+    internal class EmptyMoveGetter : MoveGetter
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public static List<EmptyMove> GetEmptyMoves(Position position)
+        public EmptyMoveGetter(Position position)
         {
-            var moves = new List<EmptyMove>();
-            for (var i = 0; i < position.Board.FileCount; i++)
+            Position = position;
+        }
+
+        public override Position Position { get; }
+
+        public override List<Move> GetMovesIgnoringKing()
+        {
+            var moves = new List<Move>();
+            for (var i = 0; i < Position.Board.FileCount; i++)
             {
-                for (var j = 0; j < position.Board.RankCount; j++)
+                for (var j = 0; j < Position.Board.RankCount; j++)
                 {
-                    ISquare square = position.Board[i, j];
+                    ISquare square = Position.Board[i, j];
                     var piece = square as Piece;
-                    if ((piece == null) || piece.White != position.WhiteMove)
+                    if ((piece == null) || piece.White != Position.WhiteMove)
                     {
                         continue;
                     }
                     List<List<BoardVector>> moveVectors = piece.GenerateEmptyMoves();
                     IEnumerable<EmptyMove> filteredMoves = moveVectors
                         .Select(x => x.Select(y => new BoardVector(i + y.File, j + y.Rank)))
-                        .Where(x => x.All(y => position.Board.OnBoard(y)))
+                        .Where(x => x.All(y => Position.Board.OnBoard(y)))
                         .Select(x => new EmptyMove(x.ToList(), piece.Moved))
-                        .Where(x => x.PassingSquares.All(y => position.Board.EmptySquare(y)))
-                        .Where(x => x.KingSafe(position));
+                        .Where(x => x.PassingSquares.All(y => Position.Board.EmptySquare(y)));
                     moves.AddRange(filteredMoves);
                 }
             }

@@ -4,34 +4,35 @@ using System.Linq;
 
 namespace Chess.Game.Moves
 {
-    internal static class CaptureGetter
+    internal class CaptureGetter : MoveGetter
     {
-        public static List<Capture> GetCaptures(Position position)
+        public CaptureGetter(Position position)
         {
-            var capturesIgnoringKingSafety = GetCapturesIgnoringKingSafety(position);
-            return capturesIgnoringKingSafety.Where(x => x.KingSafe(position)).ToList();
+            Position = position;
         }
 
-        public static List<Capture> GetCapturesIgnoringKingSafety(Position position)
+        public override Position Position { get; }
+
+        public override List<Move> GetMovesIgnoringKing()
         {
-            var moves = new List<Capture>();
-            for (var i = 0; i < position.Board.FileCount; i++)
+            var moves = new List<Move>();
+            for (var i = 0; i < Position.Board.FileCount; i++)
             {
-                for (var j = 0; j < position.Board.RankCount; j++)
+                for (var j = 0; j < Position.Board.RankCount; j++)
                 {
-                    ISquare square = position.Board[i, j];
+                    ISquare square = Position.Board[i, j];
                     var piece = square as Piece;
-                    if ((piece == null) || piece.White != position.WhiteMove)
+                    if ((piece == null) || piece.White != Position.WhiteMove)
                     {
                         continue;
                     }
                     List<List<BoardVector>> moveVectors = piece.GenerateCaptures();
                     IEnumerable<Capture> filteredMoves = moveVectors
                         .Select(x => x.Select(y => new BoardVector(i + y.File, j + y.Rank)))
-                        .Where(x => x.All(y => position.Board.OnBoard(y)))
-                        .Select(x => GetCaptureFromCaptureOnBoard(x.ToList(), piece.Moved, position.Board))
-                        .Where(x => EnemyPiece(x.CaptureSquareVector, position.Board, position.WhiteMove))
-                        .Where(x => x.PassingSquares.All(y => position.Board.EmptySquare(y)));
+                        .Where(x => x.All(y => Position.Board.OnBoard(y)))
+                        .Select(x => GetCaptureFromCaptureOnBoard(x.ToList(), piece.Moved, Position.Board))
+                        .Where(x => EnemyPiece(x.CaptureSquareVector, Position.Board, Position.WhiteMove))
+                        .Where(x => x.PassingSquares.All(y => Position.Board.EmptySquare(y)));
                     moves.AddRange(filteredMoves);
                 }
             }

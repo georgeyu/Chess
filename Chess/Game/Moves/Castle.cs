@@ -20,7 +20,7 @@ namespace Chess.Game.Moves
             rookStartSquare = new BoardVector(
                 kingSide ? Board.Length - 1 - Board.RookFileOffset : Board.RookFileOffset,
                 pieceRank);
-            rookEndSquare = new BoardVector(kingEndSquare.File + (kingSide ? 1 : -1), pieceRank);
+            rookEndSquare = new BoardVector(kingEndSquare.File + (kingSide ? -1 : 1), pieceRank);
         }
 
         public override void Change(Position position)

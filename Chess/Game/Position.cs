@@ -1,5 +1,6 @@
 ﻿using Chess.Game.Moves;
 using log4net;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -9,12 +10,18 @@ namespace Chess.Game
     {
         public const string FenDelimiter = "/";
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly CaptureGetter captureGetter;
+        private readonly CastleGetter castleGetter;
+        private readonly EmptyMoveGetter emptyMoveGetter;
 
         public Position()
         {
             WhiteMove = true;
             MoveCount = 1;
             Board = new Board();
+            captureGetter = new CaptureGetter(this);
+            castleGetter = new CastleGetter(this);
+            emptyMoveGetter = new EmptyMoveGetter(this);
         }
 
         public Board Board { get; private set; }
@@ -43,12 +50,12 @@ namespace Chess.Game
 
         public bool KingSafe()
         {
-            List<Capture> captures = CaptureGetter.GetCapturesIgnoringKingSafety(this);
-            foreach (Capture capture in captures)
+            List<Move> moves = captureGetter.GetMovesIgnoringKing();
+            foreach (Move move in moves)
             {
-                capture.MakeMove(this);
+                move.MakeMove(this);
                 bool kingExists = Board.KingExists(WhiteMove);
-                capture.UndoMove(this);
+                move.UndoMove(this);
                 if (!kingExists)
                 {
                     return false;
@@ -63,6 +70,18 @@ namespace Chess.Game
             bool kingSafe = KingSafe();
             DecrementTurn();
             return !kingSafe;
+        }
+
+        public List<Move> GetMoves()
+        {
+            var moves = new List<Move>();
+            var emptyMoves = emptyMoveGetter.GetMoves();
+            moves.AddRange(emptyMoves);
+            var captures = captureGetter.GetMoves();
+            moves.AddRange(captures);
+            var castles = castleGetter.GetMoves();
+            moves.AddRange(castles);
+            return moves;
         }
 
         public string GetFen()

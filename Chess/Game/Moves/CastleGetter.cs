@@ -4,24 +4,31 @@ using System.Linq;
 
 namespace Chess.Game.Moves
 {
-    internal static class CastleGetter
+    internal class CastleGetter : MoveGetter
     {
-        public static List<Castle> GetCastles(Position position)
+        public CastleGetter(Position position)
         {
-            var castles = new List<Castle>();
-            bool kingSideLegal = CastleLegal(true, position);
-            var kingSideCastle = new Castle(position.WhiteMove, true);
+            Position = position;
+        }
+
+        public override Position Position { get; }
+
+        public override List<Move> GetMovesIgnoringKing()
+        {
+            var moves = new List<Move>();
+            bool kingSideLegal = CastleLegal(true, Position);
+            var kingSideCastle = new Castle(Position.WhiteMove, true);
             if (kingSideLegal)
             {
-                castles.Add(kingSideCastle);
+                moves.Add(kingSideCastle);
             }
-            bool queenSideLegal = CastleLegal(false, position);
-            var queenSideCastle = new Castle(position.WhiteMove, false);
+            bool queenSideLegal = CastleLegal(false, Position);
+            var queenSideCastle = new Castle(Position.WhiteMove, false);
             if (queenSideLegal)
             {
-                castles.Add(queenSideCastle);
+                moves.Add(queenSideCastle);
             }
-            return castles;
+            return moves;
         }
 
         private static bool CastleLegal(bool kingSide, Position position)
@@ -40,14 +47,6 @@ namespace Chess.Game.Moves
                 rank);
             var passingSquares = new List<BoardVector>() { firstPassingSquare, secondPassingSquare };
             var firstMove = new EmptyMove(new List<BoardVector>() { kingSquare, firstPassingSquare }, false);
-            var secondMove = new EmptyMove(
-                new List<BoardVector>()
-                {
-                    kingSquare,
-                    firstPassingSquare,
-                    secondPassingSquare
-                },
-                false);
             return
                 (king != null) &&
                 (king.White == position.WhiteMove) &&
@@ -57,8 +56,7 @@ namespace Chess.Game.Moves
                 (!rook.Moved) &&
                 (passingSquares.All(x => position.Board.EmptySquare(x))) &&
                 (!position.KingInCheck()) &&
-                (firstMove.KingSafe(position)) &&
-                (secondMove.KingSafe(position));
+                (firstMove.KingSafe(position));
         }
     }
 }

@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Chess.Game.Moves
 {
-    internal static class MoveGetter
+    internal abstract class MoveGetter
     {
-        public static List<Move> GetMoves(Position position)
+        public abstract Position Position { get; }
+
+        public abstract List<Move> GetMovesIgnoringKing();
+
+        public List<Move> GetMoves()
         {
-            var moves = new List<Move>();
-            var emptyMoves = EmptyMoveGetter.GetEmptyMoves(position);
-            moves.AddRange(emptyMoves);
-            var captures = CaptureGetter.GetCaptures(position);
-            moves.AddRange(captures);
-            var castles = CastleGetter.GetCastles(position);
-            moves.AddRange(castles);
-            return moves;
+            List<Move> movesIgnoringKing = GetMovesIgnoringKing();
+            return movesIgnoringKing.Where(x => x.KingSafe(Position)).ToList();
         }
     }
 }
