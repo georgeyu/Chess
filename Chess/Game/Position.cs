@@ -1,4 +1,5 @@
 ﻿using Chess.Game.Moves;
+using Chess.Game.Pieces;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -9,21 +10,25 @@ namespace Chess.Game
     internal class Position
     {
         public const string FenDelimiter = "/";
+        public List<BoardVector> enPassantSquares;
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly CaptureGetter captureGetter;
         private readonly CastleGetter castleGetter;
         private readonly EmptyMoveGetter emptyMoveGetter;
         private readonly PromoteGetter promoteGetter;
+        private readonly EnPassantGetter enPassantGetter;
 
         public Position()
         {
             WhiteMove = true;
             MoveCount = 1;
             Board = new Board();
+            enPassantSquares = new List<BoardVector>();
             captureGetter = new CaptureGetter(this);
             castleGetter = new CastleGetter(this);
             emptyMoveGetter = new EmptyMoveGetter(this);
             promoteGetter = new PromoteGetter(this);
+            enPassantGetter = new EnPassantGetter(this);
         }
 
         public Board Board { get; private set; }
@@ -55,9 +60,10 @@ namespace Chess.Game
             List<Move> moves = captureGetter.GetMovesIgnoringKing();
             foreach (Move move in moves)
             {
+                var enPassantSquares = this.enPassantSquares;
                 move.MakeMove(this);
                 bool kingExists = Board.KingExists(WhiteMove);
-                move.UndoMove(this);
+                move.UndoMove(this, enPassantSquares);
                 if (!kingExists)
                 {
                     return false;
@@ -77,14 +83,16 @@ namespace Chess.Game
         public List<Move> GetMoves()
         {
             var moves = new List<Move>();
-            var emptyMoves = emptyMoveGetter.GetMoves();
+            List<Move> emptyMoves = emptyMoveGetter.GetMoves();
             moves.AddRange(emptyMoves);
-            var captures = captureGetter.GetMoves();
+            List<Move> captures = captureGetter.GetMoves();
             moves.AddRange(captures);
-            var castles = castleGetter.GetMoves();
+            List<Move> castles = castleGetter.GetMoves();
             moves.AddRange(castles);
-            var promotes = promoteGetter.GetMoves();
+            List<Move> promotes = promoteGetter.GetMoves();
             moves.AddRange(promotes);
+            List<Move> enPassants = enPassantGetter.GetMoves();
+            moves.AddRange(enPassants);
             return moves;
         }
 

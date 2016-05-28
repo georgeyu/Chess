@@ -11,7 +11,7 @@ namespace ChessTest
     [TestClass]
     public class MoveTest
     {
-        private const int RandomMoveCount = 1000;
+        private const int RandomMoveCount = 100;
         private const int MaxCharInLine = 80;
         private const string NajdorfFen = "rnbqkb1r/1p2pppp/p2p1n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R";
         private const string RuyLopezFen = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R";

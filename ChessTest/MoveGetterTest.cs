@@ -12,6 +12,7 @@ namespace ChessTest
         private const int StartMoveCount = 20;
         private const int CastleLegalTestMoveCount = 29;
         private const int PromoteLegalTestMoveCount = 31;
+        private const int EnPassantLegalTestMoveCount = 31;
         private readonly TestUtil testUtil;
 
         public MoveGetterTest()
@@ -86,6 +87,22 @@ namespace ChessTest
             black4.MakeMove(position);
             List<Move> moves = position.GetMoves();
             Assert.IsTrue(moves.Count == PromoteLegalTestMoveCount);
+        }
+
+        [TestMethod]
+        public void GetMoves_EnPassantLegal_Count()
+        {
+            var position = new Position();
+            var white1 = new EmptyMove(testUtil.GetSquaresFromStrings("e2", "e3", "e4"), false);
+            white1.MakeMove(position);
+            var black1 = new EmptyMove(testUtil.GetSquaresFromStrings("d7", "d6", "d5"), false);
+            black1.MakeMove(position);
+            var white2 = new EmptyMove(testUtil.GetSquaresFromStrings("e4", "e5"), true);
+            white2.MakeMove(position);
+            var black2 = new EmptyMove(testUtil.GetSquaresFromStrings("f7", "f6", "f5"), false);
+            black2.MakeMove(position);
+            List<Move> moves = position.GetMoves();
+            Assert.IsTrue(moves.Count == EnPassantLegalTestMoveCount);
         }
     }
 }

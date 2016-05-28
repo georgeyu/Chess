@@ -1,4 +1,5 @@
 ﻿using Chess.Game.Pieces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,6 +30,18 @@ namespace Chess.Game.Moves
             piece.Moved = true;
             position.Board[StartSquareVector] = new EmptySquare();
             position.Board[EndSquareVector] = piece;
+            var pawn = piece as Pawn;
+            if (pawn == null)
+            {
+                return;
+            }
+            var absRankChange = Math.Abs(EndSquareVector.Rank - StartSquareVector.Rank);
+            if (absRankChange == EnPassant.RankChangeForMoveBeforeEnPassant)
+            {
+                var enPassantRank = (EndSquareVector.Rank + StartSquareVector.Rank) / 2;
+                var enPassantSquare = new BoardVector(StartSquareVector.File, enPassantRank);
+                position.enPassantSquares = new List<BoardVector>() { enPassantSquare };
+            }
         }
 
         public override void UndoChange(Position position)
