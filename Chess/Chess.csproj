@@ -93,6 +93,7 @@
     <Compile Include="Game\Moves\EmptyMove.cs" />
     <Compile Include="Game\Moves\Promote.cs" />
     <Compile Include="Game\Moves\EmptyMoveGetter.cs" />
+    <Compile Include="Game\Moves\PromoteGetter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

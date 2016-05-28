@@ -13,6 +13,7 @@ namespace Chess.Game
         private readonly CaptureGetter captureGetter;
         private readonly CastleGetter castleGetter;
         private readonly EmptyMoveGetter emptyMoveGetter;
+        private readonly PromoteGetter promoteGetter;
 
         public Position()
         {
@@ -22,6 +23,7 @@ namespace Chess.Game
             captureGetter = new CaptureGetter(this);
             castleGetter = new CastleGetter(this);
             emptyMoveGetter = new EmptyMoveGetter(this);
+            promoteGetter = new PromoteGetter(this);
         }
 
         public Board Board { get; private set; }
@@ -81,6 +83,8 @@ namespace Chess.Game
             moves.AddRange(captures);
             var castles = castleGetter.GetMoves();
             moves.AddRange(castles);
+            var promotes = promoteGetter.GetMoves();
+            moves.AddRange(promotes);
             return moves;
         }
 

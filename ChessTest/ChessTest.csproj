@@ -60,7 +60,7 @@
     <Compile Include="MoveTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PositionTest.cs" />
-    <Compile Include="SquareStringGenerator.cs" />
+    <Compile Include="TestUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Chess\Chess.csproj">

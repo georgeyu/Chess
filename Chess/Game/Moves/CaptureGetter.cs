@@ -32,7 +32,8 @@ namespace Chess.Game.Moves
                         .Where(x => x.All(y => Position.Board.OnBoard(y)))
                         .Select(x => GetCaptureFromCaptureOnBoard(x.ToList(), piece.Moved, Position.Board))
                         .Where(x => EnemyPiece(x.CaptureSquareVector, Position.Board, Position.WhiteMove))
-                        .Where(x => x.PassingSquares.All(y => Position.Board.EmptySquare(y)));
+                        .Where(x => x.PassingSquares.All(y => Position.Board.EmptySquare(y)))
+                        .Where(x => PromoteGetter.Promote(piece, j, Position.Board.RankCount));
                     moves.AddRange(filteredMoves);
                 }
             }

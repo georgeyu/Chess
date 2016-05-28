@@ -17,6 +17,7 @@ namespace Chess.Game.Moves
             ISquare promoteSquare,
             Piece promotedPiece)
         {
+            this.pawn = pawn;
             this.pawnSquareVector = pawnSquareVector;
             this.promoteSquareVector = promoteSquareVector;
             this.promoteSquare = promoteSquare;

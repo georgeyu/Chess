@@ -34,11 +34,13 @@ namespace Chess.Game.Moves
         private static bool CastleLegal(bool kingSide, Position position)
         {
             var castles = new List<Castle>();
-            var rank = position.WhiteMove ? Board.PieceRankOffset : Board.Length - 1 - Board.PieceRankOffset;
+            var rank = position.WhiteMove ?
+                Board.PieceRankOffset :
+                position.Board.RankCount - 1 - Board.PieceRankOffset;
             var kingSquare = new BoardVector(Board.KingFile, rank);
             var king = position.Board[kingSquare] as King;
             var rookSquare = new BoardVector(
-                kingSide ? Board.Length - 1 - Board.RookFileOffset : Board.RookFileOffset,
+                kingSide ? position.Board.FileCount - 1 - Board.RookFileOffset : Board.RookFileOffset,
                 rank);
             var rook = position.Board[rookSquare] as Rook;
             var firstPassingSquare = new BoardVector(Board.KingFile + (kingSide ? 1 : -1), rank);
