@@ -16,6 +16,7 @@ namespace Chess.Game.Moves
         public void UndoMove(Position position, List<BoardVector> enPassantSquares)
         {
             UndoChange(position);
+            position.enPassantSquares = enPassantSquares;
             position.DecrementTurn();
         }
 
