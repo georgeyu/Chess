@@ -1,23 +1,25 @@
-﻿using Chess.Game.Pieces;
-using log4net;
+﻿using log4net;
 using log4net.Config;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
-namespace Chess
+namespace Chess.Gui
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class BoardWindow : Window
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public MainWindow()
+        public BoardWindow()
         {
             XmlConfigurator.Configure();
-            var boardVector = new BoardVector(2, -3);
             InitializeComponent();
+            DataContext = new BoardViewModel();
         }
     }
 }

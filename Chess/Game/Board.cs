@@ -15,35 +15,34 @@ namespace Chess.Game
         private const int KnightFileOffset = 1;
         private const int BishopFileOffset = 2;
         private const int QueenFile = 3;
-        private readonly ISquare[,] squares;
 
         public Board()
         {
-            squares = new ISquare[Length, Length];
+            Squares = new ISquare[Length, Length];
             for (var i = 0; i < Length; i++)
             {
                 for (var j = 0; j < Length; j++)
                 {
-                    squares[i, j] = new EmptySquare();
+                    Squares[i, j] = new EmptySquare();
                 }
             }
             for (var i = 0; i < Length; i++)
             {
-                squares[i, PawnRankOffset] = new Pawn(true);
-                squares[i, Length - 1 - PawnRankOffset] = new Pawn(false);
+                Squares[i, PawnRankOffset] = new Pawn(true);
+                Squares[i, Length - 1 - PawnRankOffset] = new Pawn(false);
             }
             AddTwinPieces(RookFileOffset, typeof(Rook));
             AddTwinPieces(KnightFileOffset, typeof(Knight));
             AddTwinPieces(BishopFileOffset, typeof(Bishop));
-            squares[QueenFile, PieceRankOffset] = new Queen(true);
-            squares[KingFile, PieceRankOffset] = new King(true);
-            squares[QueenFile, Length - 1 - PieceRankOffset] = new Queen(false);
-            squares[KingFile, Length - 1 - PieceRankOffset] = new King(false);
+            Squares[QueenFile, PieceRankOffset] = new Queen(true);
+            Squares[KingFile, PieceRankOffset] = new King(true);
+            Squares[QueenFile, Length - 1 - PieceRankOffset] = new Queen(false);
+            Squares[KingFile, Length - 1 - PieceRankOffset] = new King(false);
         }
 
-        public int FileCount => squares.GetLength(FilesIndex);
+        public int FileCount => Squares.GetLength(FilesIndex);
 
-        public int RankCount => squares.GetLength(RanksIndex);
+        public int RankCount => Squares.GetLength(RanksIndex);
 
         public ISquare this[BoardVector square]
         {
@@ -61,13 +60,15 @@ namespace Chess.Game
         {
             get
             {
-                return squares[file, rank];
+                return Squares[file, rank];
             }
             set
             {
-                squares[file, rank] = value;
+                Squares[file, rank] = value;
             }
         }
+
+        public ISquare[,] Squares { get; private set; }
 
         public bool EmptySquare(BoardVector square)
         {
@@ -105,10 +106,10 @@ namespace Chess.Game
 
         private void AddTwinPieces(int fileOffset, Type pieceType)
         {
-            squares[fileOffset, PieceRankOffset] = Piece.GetPiece(pieceType, true);
-            squares[Length - 1 - fileOffset, PieceRankOffset] = Piece.GetPiece(pieceType, true);
-            squares[fileOffset, Length - 1 - PieceRankOffset] = Piece.GetPiece(pieceType, false);
-            squares[Length - 1 - fileOffset, Length - 1 - PieceRankOffset] = Piece.GetPiece(pieceType, false);
+            Squares[fileOffset, PieceRankOffset] = Piece.GetPiece(pieceType, true);
+            Squares[Length - 1 - fileOffset, PieceRankOffset] = Piece.GetPiece(pieceType, true);
+            Squares[fileOffset, Length - 1 - PieceRankOffset] = Piece.GetPiece(pieceType, false);
+            Squares[Length - 1 - fileOffset, Length - 1 - PieceRankOffset] = Piece.GetPiece(pieceType, false);
         }
     }
 }
