@@ -1,7 +1,4 @@
-﻿<Window x:Class="Chess.Gui.BoardWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Chess" Width="698">
+﻿<Window x:Class="Chess.Gui.BoardWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Chess" Width="698">
     <ItemsControl ItemsSource="{Binding Squares}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
@@ -10,7 +7,7 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <Button Background="{Binding Color}">
+                <Button Background="{Binding Color}" Click="ClickEventHandler">
                     <Image Source="{Binding Path}"/>
                 </Button>
             </DataTemplate>

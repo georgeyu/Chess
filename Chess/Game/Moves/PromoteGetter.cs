@@ -1,9 +1,6 @@
 ﻿using Chess.Game.Pieces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chess.Game.Moves
 {
@@ -33,7 +30,7 @@ namespace Chess.Game.Moves
             var moves = new List<Move>();
             var rankBeforePromote = Position.WhiteMove ?
                 RankBeforePromoteOffset :
-                Position.Board.RankCount - RankBeforePromoteOffset;
+                Position.Board.RankCount - 1 - RankBeforePromoteOffset;
             var promoteRank = Position.WhiteMove ? Position.Board.RankCount - 1: 0;
             for (var i = 0; i < Position.Board.FileCount; i++)
             {

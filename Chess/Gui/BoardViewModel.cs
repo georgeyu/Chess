@@ -1,18 +1,15 @@
 ﻿using Chess.Game;
+using Chess.Game.Moves;
 using Chess.Game.Pieces;
-using Chess.Properties;
 using log4net;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace Chess.Gui
 {
@@ -34,23 +31,39 @@ namespace Chess.Gui
         public BoardViewModel()
         {
             position = new Position();
-            GetSquares(position.Board);
+            Squares = new ObservableCollection<BoardSquare>();
+            UpdateSquares();
         }
 
-        public List<BoardSquare> Squares { get; private set; }
+        public ObservableCollection<BoardSquare> Squares { get; private set; }
 
-        private void GetSquares(Board board)
+        public void ClickEventHandler(int file, int rank)
         {
-            var squares = new List<BoardSquare>();
-            for (var i = board.RankCount - 1; i >=  0; i--)
+            List<Move> moves = position.GetMoves();
+            var random = new Random();
+            var index = random.Next(moves.Count);
+            Move move = moves.ElementAt(index);
+            move.MakeMove(position);
+            UpdateSquares();
+        }
+
+        private void OnSquareClick(BoardSquare square)
+        {
+            MessageBox.Show("aoeu");
+            MessageBox.Show(string.Format("you clicked on file: {0} and rank: {1}", square.File, square.Rank));
+        }
+
+        private void UpdateSquares()
+        {
+            Squares.Clear();
+            for (var i = position.Board.RankCount - 1; i >= 0; i--)
             {
-                for (var j = 0; j < board.FileCount; j++)
+                for (var j = 0; j < position.Board.FileCount; j++)
                 {
-                    BoardSquare boardSquare = GetBoardSquare(board.Squares[j, i], i, j);
-                    squares.Add(boardSquare);
+                    BoardSquare boardSquare = GetBoardSquare(position.Board.Squares[j, i], i, j);
+                    Squares.Add(boardSquare);
                 }
             }
-            Squares = squares;
         }
 
         private BoardSquare GetBoardSquare(ISquare square, int rank, int file)

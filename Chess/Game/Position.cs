@@ -1,7 +1,6 @@
 ﻿using Chess.Game.Moves;
 using Chess.Game.Pieces;
 using log4net;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 

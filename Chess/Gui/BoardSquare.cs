@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows.Media;
 
 namespace Chess.Gui
 {
     internal class BoardSquare
     {
+        private string path;
+
         public BoardSquare(string path, int rank, int file)
         {
             Path = path;
@@ -16,7 +14,17 @@ namespace Chess.Gui
             File = file;
         }
 
-        public string Path { get; private set; }
+        public string Path
+        {
+            get
+            {
+                return path;
+            }
+            set
+            {
+                path = value;
+            }
+        }
 
         public int Rank { get; private set; }
         

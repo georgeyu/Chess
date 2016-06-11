@@ -1,5 +1,4 @@
 ﻿using Chess.Game.Pieces;
-using System;
 
 namespace Chess.Game.Moves
 {
