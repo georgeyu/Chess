@@ -5,8 +5,6 @@ namespace Chess.Game.Moves
     internal class Promote : Move
     {
         private readonly Piece pawn;
-        private readonly BoardVector pawnSquareVector;
-        private readonly BoardVector promoteSquareVector;
         private readonly ISquare promoteSquare;
         private readonly Piece promotedPiece;
 
@@ -18,22 +16,26 @@ namespace Chess.Game.Moves
             Piece promotedPiece)
         {
             this.pawn = pawn;
-            this.pawnSquareVector = pawnSquareVector;
-            this.promoteSquareVector = promoteSquareVector;
+            StartSquareVector = pawnSquareVector;
+            EndSquareVector = promoteSquareVector;
             this.promoteSquare = promoteSquare;
             this.promotedPiece = promotedPiece;
         }
 
+        public override BoardVector StartSquareVector { get; }
+
+        public override BoardVector EndSquareVector { get; }
+
         public override void Change(Position position)
         {
-            position.Board[promoteSquareVector] = promotedPiece;
-            position.Board[pawnSquareVector] = new EmptySquare();
+            position.Board[EndSquareVector] = promotedPiece;
+            position.Board[StartSquareVector] = new EmptySquare();
         }
 
         public override void UndoChange(Position position)
         {
-            position.Board[pawnSquareVector] = pawn;
-            position.Board[promoteSquareVector] = promoteSquare;
+            position.Board[StartSquareVector] = pawn;
+            position.Board[EndSquareVector] = promoteSquare;
         }
     }
 }

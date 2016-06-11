@@ -9,19 +9,19 @@ namespace Chess.Game.Moves
         public Capture(List<BoardVector> squares, bool moved, Piece capturedPiece)
         {
             StartSquareVector = squares.First();
-            CaptureSquareVector = squares.Last();
+            EndSquareVector = squares.Last();
             Moved = moved;
             CapturedPiece = capturedPiece;
             PassingSquares = squares
-                .Except(new List<BoardVector>() { StartSquareVector, CaptureSquareVector })
+                .Except(new List<BoardVector>() { StartSquareVector, EndSquareVector })
                 .ToList();
         }
 
         public bool Moved { get; private set; }
 
-        public BoardVector StartSquareVector { get; private set; }
+        public override BoardVector StartSquareVector { get; }
 
-        public BoardVector CaptureSquareVector { get; private set; }
+        public override BoardVector EndSquareVector { get; }
 
         public Piece CapturedPiece { get; private set; }
 
@@ -33,15 +33,15 @@ namespace Chess.Game.Moves
             var capturingPiece = (Piece)startSquare;
             capturingPiece.Moved = true;
             position.Board[StartSquareVector] = new EmptySquare();
-            position.Board[CaptureSquareVector] = capturingPiece;
+            position.Board[EndSquareVector] = capturingPiece;
         }
 
         public override void UndoChange(Position position)
         {
-            ISquare captureSquare = position.Board[CaptureSquareVector];
+            ISquare captureSquare = position.Board[EndSquareVector];
             var capturingPiece = captureSquare as Piece;
             capturingPiece.Moved = Moved;
-            position.Board[CaptureSquareVector] = CapturedPiece;
+            position.Board[EndSquareVector] = CapturedPiece;
             position.Board[StartSquareVector] = capturingPiece;
         }
     }

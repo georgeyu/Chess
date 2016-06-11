@@ -28,13 +28,13 @@ namespace Chess.Game.Moves
         {
             return enPassantSquares
                 .Select(x => new EnPassant(new BoardVector(x.File + (captureLeft ? 1 : -1), x.Rank + direction), x))
-                .Where(x => Position.Board.OnBoard(x.StartSquare))
+                .Where(x => Position.Board.OnBoard(x.StartSquareVector))
                 .Where(x => PawnColorMatch(x));
         }
 
         private bool PawnColorMatch(EnPassant enPassant)
         {
-            var pawn = Position.Board[enPassant.StartSquare] as Pawn;
+            var pawn = Position.Board[enPassant.StartSquareVector] as Pawn;
             if (pawn == null)
             {
                 return false;

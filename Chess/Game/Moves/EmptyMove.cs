@@ -15,9 +15,9 @@ namespace Chess.Game.Moves
             Moved = moved;
         }
 
-        public BoardVector StartSquareVector { get; private set; }
+        public override BoardVector StartSquareVector { get; }
 
-        public BoardVector EndSquareVector { get; private set; }
+        public override BoardVector EndSquareVector { get; }
 
         public List<BoardVector> PassingSquares { get; private set; }
 

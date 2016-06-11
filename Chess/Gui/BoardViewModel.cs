@@ -27,6 +27,7 @@ namespace Chess.Gui
         private const string PngExtension = "png";
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Position position;
+        private BoardVector startSquare;
 
         public BoardViewModel()
         {
@@ -39,18 +40,30 @@ namespace Chess.Gui
 
         public void ClickEventHandler(int file, int rank)
         {
+            var clickedSquareVector = new BoardVector(file, rank);
+            if (startSquare == null)
+            {
+                startSquare = clickedSquareVector;
+                return;
+            }
             List<Move> moves = position.GetMoves();
+            IEnumerable<Move> matchingMoves = moves
+                .Where(x => x.StartSquareVector.Equals(startSquare))
+                .Where(x => x.EndSquareVector.Equals(clickedSquareVector));
+            Move clickedMove = matchingMoves.FirstOrDefault();
+            if (clickedMove == null)
+            {
+                startSquare = null;
+                return;
+            }
+            clickedMove.MakeMove(position);
             var random = new Random();
-            var index = random.Next(moves.Count);
-            Move move = moves.ElementAt(index);
-            move.MakeMove(position);
+            List<Move> enemyMoves = position.GetMoves();
+            var index = random.Next(enemyMoves.Count);
+            Move enemyMove = enemyMoves.ElementAt(index);
+            enemyMove.MakeMove(position);
+            startSquare = null;
             UpdateSquares();
-        }
-
-        private void OnSquareClick(BoardSquare square)
-        {
-            MessageBox.Show("aoeu");
-            MessageBox.Show(string.Format("you clicked on file: {0} and rank: {1}", square.File, square.Rank));
         }
 
         private void UpdateSquares()

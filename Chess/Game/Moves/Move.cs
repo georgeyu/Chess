@@ -6,6 +6,10 @@ namespace Chess.Game.Moves
 {
     internal abstract class Move
     {
+        public abstract BoardVector StartSquareVector { get; }
+
+        public abstract BoardVector EndSquareVector { get; }
+
         public void MakeMove(Position position)
         {
             position.enPassantSquares = new List<BoardVector>();
