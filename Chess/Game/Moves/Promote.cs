@@ -6,7 +6,6 @@ namespace Chess.Game.Moves
     {
         private readonly Piece pawn;
         private readonly ISquare promoteSquare;
-        private readonly Piece promotedPiece;
 
         public Promote(
             Piece pawn,
@@ -19,16 +18,18 @@ namespace Chess.Game.Moves
             StartSquareVector = pawnSquareVector;
             EndSquareVector = promoteSquareVector;
             this.promoteSquare = promoteSquare;
-            this.promotedPiece = promotedPiece;
+            PromotedPiece = promotedPiece;
         }
 
         public override BoardVector StartSquareVector { get; }
 
         public override BoardVector EndSquareVector { get; }
 
+        public Piece PromotedPiece { get; private set; }
+
         public override void Change(Position position)
         {
-            position.Board[EndSquareVector] = promotedPiece;
+            position.Board[EndSquareVector] = PromotedPiece;
             position.Board[StartSquareVector] = new EmptySquare();
         }
 

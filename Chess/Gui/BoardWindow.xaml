@@ -7,7 +7,7 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <Button Background="{Binding Color}" Click="ClickEventHandler">
+                <Button Background="{Binding Color}" Click="SquareClickedEventHandler">
                     <Image Source="{Binding Path}"/>
                 </Button>
             </DataTemplate>

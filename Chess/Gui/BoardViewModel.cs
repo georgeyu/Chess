@@ -28,6 +28,7 @@ namespace Chess.Gui
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly Position position;
         private BoardVector startSquare;
+        private IEnumerable<Promote> promoteMoves;
 
         public BoardViewModel()
         {
@@ -36,9 +37,11 @@ namespace Chess.Gui
             UpdateSquares();
         }
 
+        public Action Promoting = delegate { };
+
         public ObservableCollection<BoardSquare> Squares { get; private set; }
 
-        public void ClickEventHandler(int file, int rank)
+        public void SquareClickedEventHandler(int file, int rank)
         {
             var clickedSquareVector = new BoardVector(file, rank);
             if (startSquare == null)
@@ -56,14 +59,22 @@ namespace Chess.Gui
                 startSquare = null;
                 return;
             }
-            clickedMove.MakeMove(position);
-            var random = new Random();
-            List<Move> enemyMoves = position.GetMoves();
-            var index = random.Next(enemyMoves.Count);
-            Move enemyMove = enemyMoves.ElementAt(index);
-            enemyMove.MakeMove(position);
-            startSquare = null;
-            UpdateSquares();
+            else if (clickedMove is Promote)
+            {
+                promoteMoves = matchingMoves.Select(x => (Promote)x);
+                Promoting();
+                return;
+            }
+            else
+            {
+                MakeMove(clickedMove);
+            }
+        }
+
+        public void PromoteClickedEventHandler(Type pieceType)
+        {
+            Move move = promoteMoves.Where(x => x.PromotedPiece.GetType() == pieceType).First();
+            MakeMove(move);
         }
 
         private void UpdateSquares()
@@ -114,6 +125,18 @@ namespace Chess.Gui
             var fullPath = Path.GetFullPath(
                 ImageDirectory + "/" + (piece.White ? White : Black) + pieceString + "." + PngExtension);
             return new BoardSquare(fullPath, rank, file);
+        }
+
+        private void MakeMove(Move move)
+        {
+            move.MakeMove(position);
+            var random = new Random();
+            List<Move> enemyMoves = position.GetMoves();
+            var index = random.Next(enemyMoves.Count);
+            Move enemyMove = enemyMoves.ElementAt(index);
+            enemyMove.MakeMove(position);
+            startSquare = null;
+            UpdateSquares();
         }
     }
 }

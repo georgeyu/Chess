@@ -1,5 +1,6 @@
 ﻿using log4net;
 using log4net.Config;
+using System;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +16,7 @@ namespace Chess.Gui
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly BoardViewModel boardViewModel;
+        private readonly PromoteWindow promoteWindow;
 
         public BoardWindow()
         {
@@ -22,13 +24,26 @@ namespace Chess.Gui
             InitializeComponent();
             boardViewModel = new BoardViewModel();
             DataContext = boardViewModel;
+            boardViewModel.Promoting += () => PromoteEventHandler();
+            promoteWindow = new PromoteWindow();
+            promoteWindow.Clicked += PromoteClickedEventHandler;
         }
 
-        private void ClickEventHandler(object sender, RoutedEventArgs e)
+        private void PromoteClickedEventHandler(object sender, Type e)
         {
-            boardViewModel.ClickEventHandler(
+            boardViewModel.PromoteClickedEventHandler(e);
+        }
+
+        private void SquareClickedEventHandler(object sender, RoutedEventArgs e)
+        {
+            boardViewModel.SquareClickedEventHandler(
                 ((BoardSquare)((Button)sender).DataContext).File,
                 ((BoardSquare)((Button)sender).DataContext).Rank);
+        }
+
+        private void PromoteEventHandler()
+        {
+            promoteWindow.Show();
         }
     }
 }
