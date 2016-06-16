@@ -15,18 +15,16 @@ namespace Chess.Gui
     public partial class BoardWindow : Window
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly BoardViewModel boardViewModel;
+        private BoardViewModel boardViewModel;
         private readonly PromoteWindow promoteWindow;
 
         public BoardWindow()
         {
             XmlConfigurator.Configure();
             InitializeComponent();
-            boardViewModel = new BoardViewModel();
-            DataContext = boardViewModel;
-            boardViewModel.Promoting += () => PromoteEventHandler();
             promoteWindow = new PromoteWindow();
             promoteWindow.Clicked += PromoteClickedEventHandler;
+            GetNewBoard();
         }
 
         private void PromoteClickedEventHandler(object sender, Type e)
@@ -44,6 +42,32 @@ namespace Chess.Gui
         private void PromoteEventHandler()
         {
             promoteWindow.Show();
+        }
+
+        private void WonEventHandler()
+        {
+            MessageBox.Show("You won.");
+            GetNewBoard();
+        }
+
+        private void StalemateEventHandler()
+        {
+            MessageBox.Show("Stalemate");
+        }
+
+        private void LostEventHandler()
+        {
+            MessageBox.Show("You lost.");
+        }
+
+        private void GetNewBoard()
+        {
+            boardViewModel = new BoardViewModel();
+            DataContext = boardViewModel;
+            boardViewModel.Promoting += () => PromoteEventHandler();
+            boardViewModel.Won += () => WonEventHandler();
+            boardViewModel.Stalemate += () => StalemateEventHandler();
+            boardViewModel.Lost += () => LostEventHandler();
         }
     }
 }

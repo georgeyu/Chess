@@ -39,6 +39,12 @@ namespace Chess.Gui
 
         public Action Promoting = delegate { };
 
+        public Action Won = delegate { };
+
+        public Action Stalemate = delegate { };
+
+        public Action Lost = delegate { };
+
         public ObservableCollection<BoardSquare> Squares { get; private set; }
 
         public void SquareClickedEventHandler(int file, int rank)
@@ -132,11 +138,25 @@ namespace Chess.Gui
             move.MakeMove(position);
             var random = new Random();
             List<Move> enemyMoves = position.GetMoves();
-            var index = random.Next(enemyMoves.Count);
-            Move enemyMove = enemyMoves.ElementAt(index);
-            enemyMove.MakeMove(position);
-            startSquare = null;
+            if (enemyMoves.Count > 0)
+            {
+                var index = random.Next(enemyMoves.Count);
+                Move enemyMove = enemyMoves.ElementAt(index);
+                enemyMove.MakeMove(position);
+                startSquare = null;
+                UpdateSquares();
+                return;
+            }
             UpdateSquares();
+            bool kingInCheck = position.KingInCheck();
+            if (kingInCheck)
+            {
+                Won();
+            }
+            else
+            {
+                Stalemate();
+            }
         }
     }
 }
