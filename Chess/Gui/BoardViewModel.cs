@@ -55,7 +55,6 @@ namespace Chess.Gui
                 startSquare = clickedSquareVector;
                 BoardSquare clickedSquare = Squares.Where(x => (x.File == file && x.Rank == rank)).First();
                 clickedSquare.Selected = true;
-                UpdateSquares();
                 return;
             }
             List<Move> moves = position.GetMoves();
@@ -150,7 +149,6 @@ namespace Chess.Gui
                 UpdateSquares();
                 return;
             }
-            UpdateSquares();
             bool kingInCheck = position.KingInCheck();
             if (kingInCheck)
             {
