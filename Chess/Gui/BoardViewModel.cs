@@ -53,6 +53,9 @@ namespace Chess.Gui
             if (startSquare == null)
             {
                 startSquare = clickedSquareVector;
+                BoardSquare clickedSquare = Squares.Where(x => (x.File == file && x.Rank == rank)).First();
+                clickedSquare.Selected = true;
+                UpdateSquares();
                 return;
             }
             List<Move> moves = position.GetMoves();

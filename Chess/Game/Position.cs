@@ -2,6 +2,7 @@
 using Chess.Game.Pieces;
 using log4net;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Chess.Game
@@ -56,12 +57,14 @@ namespace Chess.Game
 
         public bool KingSafe()
         {
-            List<Move> moves = captureGetter.GetMovesIgnoringKing();
-            foreach (Move move in moves)
+            var captures = captureGetter.GetMovesIgnoringKing();
+            var promotes = promoteGetter.GetMovesIgnoringKing();
+            var moves = captures.Concat(promotes);
+            foreach (var move in moves)
             {
                 var enPassantSquares = this.enPassantSquares;
                 move.MakeMove(this);
-                bool kingExists = Board.KingExists(WhiteMove);
+                var kingExists = Board.KingExists(WhiteMove);
                 move.UndoMove(this, enPassantSquares);
                 if (!kingExists)
                 {

@@ -12,6 +12,7 @@ namespace Chess.Gui
             Path = path;
             Rank = rank;
             File = file;
+            Selected = false;
         }
 
         public string Path
@@ -30,6 +31,21 @@ namespace Chess.Gui
         
         public int File { get; private set; }
 
-        public Brush Color => ((Rank + File) % 2 == 0) ? Brushes.Green : Brushes.White;
+        public bool Selected { get; set; }
+
+        public Brush Color
+        {
+            get
+            {
+                if ((Rank + File) % 2 == 0)
+                {
+                    return Selected ? Brushes.DarkGreen : Brushes.Green;
+                }
+                else
+                {
+                    return Selected ? Brushes.Gray : Brushes.White;
+                }
+            }
+        }
     }
 }
